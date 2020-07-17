@@ -15,8 +15,16 @@ teaching material, and more.
 
 **Current version: 0.1**
 
+## Run the simulation:
+
+Head to the [Github Pages site](https://gregparkes.github.io/WebBattleSim/) and click 'Restart' to begin the animation.
+There are many parameters to play with, currently we only give 'default' settings
+and scenarios.
+
+Note that running the simulation requires Javascript.
+
 ![Image not found](res/main.gif)
 
 ***
 
-Ensure that any use of this material is appropriately referenced and in compliance with the [license](license.html).
+Ensure that any use of this material is appropriately referenced and in compliance with the [license](https://gregparkes.github.io/WebBattleSim/license.html).
