@@ -1,22 +1,47 @@
+// an enum for teams
+
+const TEAM = {
+    REPUBLIC: 0, CIS: 1
+}
+
 // A spritable refers to a generic object which exists in
 // the canvas, has coordinates and can be drawn
 
-class Spritable {
+class CanvObj {
+    // a canvas element or object which is updatable and 'maybe' renderable
+    constructor() {
+        // has an 'alive' property, usually as to whether to draw or not
+        this.alive = true;
+    }
+
+    update(md) {
+        // your code here
+    }
+
+    render(ctx) {
+        // your code here
+    }
+
+}
+
+
+class Sprite extends CanvObj {
     // call the constructor
     constructor(x, y, team) {
+        super();
         this.x = x;
         this.y = y;
         this.team = team;
         // other parameters for position and team
-        this.color = (team === "Republic") ? [255, 0, 0] : [0, 0, 255];
+        this.color = (team === TEAM.REPUBLIC) ? [255, 0, 0] : [0, 0, 255];
     }
 
     _switch_team() {
-        if (this.team === "CIS") {
-            this.team = "Republic";
+        if (this.team === TEAM.CIS) {
+            this.team = TEAM.REPUBLIC;
             this.color = [255, 0, 0];
         } else {
-            this.team = "CIS";
+            this.team = TEAM.CIS;
             this.color = [0, 0, 255];
         }
     }
@@ -29,24 +54,19 @@ class Spritable {
         if (this.y > md.field.height - 20) {this.y = md.field.height - 20; }
     }
 
-    render(ctx) {
-    }
-
-    update(md) {
-    }
 }
 
 // combative objects have an identifier,
 // and a *Target* as well as
-// positional, team and color coordinates from Spritable
+// positional, team and color coordinates from Sprite
 
-class Combative extends Spritable {
+class Combative extends Sprite {
 
     constructor(i, x, y, team, hp) {
         super(x, y, team);
         // set ID and hit points
         this.id = i;
-        this.hp = hp;
+        this.hp = this.MAX_HP = hp;
         // target set to null
         this.target = null;
         // a bunch of hidden parameters for direcitonal derivatives
@@ -72,8 +92,6 @@ class Combative extends Spritable {
             if (update_angle) {
                 this._angle = Math.atan2(this.dy, this.dx);
             }
-        } else {
-            alert("Combative " + this.id + " has no valid target attr.")
         }
     }
 
@@ -103,15 +121,6 @@ class Combative extends Spritable {
 
     isTargetAlive() {
         return (this.target && this.target.hp > 0.0);
-    }
-
-    update(md) {
-        // perform action
-        this.updateToTarget();
-    }
-
-    render(ctx) {
-        // draw something here...
     }
 
 }

@@ -9,7 +9,6 @@ window.onload = function() {
     // populate the table on loading the html document.
 
     function drawLiveUnit(uname, cw, ch) {
-        console.log(uname);
         if (uname === "CloneTrooper") {
             return new CloneTrooper(0, cw / 2, ch / 2, null);
         } else if (uname === "B1Battledroid") {
@@ -23,7 +22,7 @@ window.onload = function() {
         }
     }
 
-    function generateTableHead(table, data) {
+    function generateTableHead(table) {
         let thead = table.createTHead(),
             row = thead.insertRow();
 
@@ -33,20 +32,19 @@ window.onload = function() {
         th.appendChild(text);
         row.appendChild(th);
 
-        for (let key of data) {
+        for (let i = 0; i < unitattrs.length; i++) {
             let th = document.createElement("th"),
-                text = document.createTextNode(key);
+                text = document.createTextNode(unitattrs[i]);
             th.appendChild(text);
             row.appendChild(th);
         }
-
     }
 
     function generateTable(table) {
 
-        let elem_key = Object.keys(UNIT);
+        let unit_key = Object.keys(UNIT);
 
-        elem_key.forEach((u, index) => {
+        unit_key.forEach((u, index) => {
             let elem_obj = UNIT[u],
                 row = table.insertRow();
             // insert a canvas cell and render the unit.
@@ -69,19 +67,20 @@ window.onload = function() {
             // now draw the unit INTO this canvas.
             live_u.render(canv_contx);
 
-            for (let attr in elem_obj) {
+            for (let i = 0; i < unitattrs.length; i++) {
                 // attr is a string key
                 let cell = row.insertCell(),
-                    text = document.createTextNode(elem_obj[attr]);
+                    text = document.createTextNode(elem_obj[unitattrs[i]]);
                 cell.appendChild(text);
             }
         });
     }
 
     let unittab = document.getElementById("unit_table"),
-        unitattrs = Object.keys(UNIT.CloneTrooper);
+        unitattrs = ["NAME","TEAM","HP","DAMAGE","MVS",
+                     "RANGE", "FIRERATE", "DEFLECT"];
 
-    generateTableHead(unittab, unitattrs);
+    generateTableHead(unittab);
     generateTable(unittab);
     // start animating the units
     animate_canvases();
@@ -108,4 +107,4 @@ window.onload = function() {
 
     }
 
-}
+};

@@ -1,5 +1,12 @@
+// types of AI for units
+
+const UNITAITYPE = {
+    AGRESSIVE: 0, HIT_AND_RUN: 1, STAND: 2, DEFENSIVE: 3
+}
+
 // A Unit is an object that can move, attack, defend and in general has a large, diverse set of
 // capabilities.
+
 
 class Unit extends Combative {
 
@@ -7,7 +14,6 @@ class Unit extends Combative {
         // call element
         super(i, x, y, team, hp);
         // attributes
-        this.MAX_HP = hp;
         this.hit_radius = 8;
         this.damage = damage;
         this.mvs = mvs;
@@ -86,7 +92,8 @@ class Unit extends Combative {
     // update and render defaults
     
     update(md) {
-        if (this.hp > 0.0) {
+        this.alive = this.hp > 0.0;
+        if (this.alive) {
             // update distance to target metrics
             this.updateToTarget();
             // make an AI decision on what to do in this circumstance.
@@ -96,7 +103,7 @@ class Unit extends Combative {
     
     render(ctx) {
         // default rendering
-        if (this.hp > 0.0) {
+        if (this.alive) {
             // hit box circle
             //draw.circle(ctx, this.x, this.y, this.color, 8);
             draw.arrow(ctx, this.x, this.y,

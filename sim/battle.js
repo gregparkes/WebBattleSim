@@ -1,7 +1,8 @@
-const battle = (ctx, units, turrets, field) => ({
-    // our Battle object contains everything in the instance needed
-    // to update our game logic for a single Battle instance.
-
+const battle = (ctx, objects, field) => ({
+    /*
+    our Battle object contains everything in the instance needed
+    to update our game logic for a single Battle instance.
+     */
     // drawing context
     ctx: ctx,
     // game logic mechanics from simulation params
@@ -16,13 +17,12 @@ const battle = (ctx, units, turrets, field) => ({
     // running / frame-based
     running: false,
     T_MAX: 2000,
+    // object array for all objects
+    objects: objects,
     // unit arrays
-    units: units,
-    // filtered by clones and droids
-    droids: units.filter(u => u.team === "CIS"),
-    clones: units.filter(u => u.team === "Republic"),
+    units: objects.filter(u => u instanceof Unit),
     // alive roster
-    _alive: units,
+    _alive: [],
     // alive unit per team caches
     _c_alive: [],
     _r_alive: [],
@@ -32,8 +32,10 @@ const battle = (ctx, units, turrets, field) => ({
     projectiles: [],
     // melee attacks
     melees: [],
+    // spawners
+    spawners: objects.filter(s => s instanceof Spawner),
     // turrets
-    turrets: turrets,
+    turrets: objects.filter(u => u instanceof Turret),
 
     // START FUNCTION to START the BATTLE
     start: function() {
@@ -43,10 +45,14 @@ const battle = (ctx, units, turrets, field) => ({
             // start running
             this.running = true;
             this.t = 0;
+            // re-assign ids to all units
+            for (let i = 0; i < this.units.length; i++) {
+                this.units[i].id = i;
+            }
             // set caches
             this.setCaches();
             // randomly assign start targets
-            ai_init_target.nearest(this.clones, this.droids);
+            ai_init_target.nearest(this._c_alive, this._r_alive);
             // assign targets to turrets if possible
             for (let i = 0; i < this.turrets.length; i++) {
                 let t = this.turrets[i],
@@ -69,9 +75,9 @@ const battle = (ctx, units, turrets, field) => ({
 
     get_enemies: function(team) {
         // get the array of the enemy of the team passed
-        if (team === "Republic") {
+        if (team === TEAM.REPUBLIC) {
             return this._c_alive;
-        } else if (team === "CIS") {
+        } else if (team === TEAM.CIS) {
             return this._r_alive;
         } else {
             alert("team '" + team + "' not recognized.");
@@ -79,9 +85,9 @@ const battle = (ctx, units, turrets, field) => ({
     },
 
     get_allies: function(team) {
-        if (team === "Republic") {
+        if (team === TEAM.REPUBLIC) {
             return this._r_alive;
-        } else if (team === "CIS") {
+        } else if (team === TEAM.CIS) {
             return this._c_alive;
         } else {
             alert("team '" + team + "' not recognized.");
@@ -107,8 +113,8 @@ const battle = (ctx, units, turrets, field) => ({
 
     setCaches: function() {
         this._alive = this.units.filter(u => u.hp > 0.);
-        this._r_alive = this._alive.filter(u => u.team === "Republic");
-        this._c_alive = this._alive.filter(u => u.team === "CIS");
+        this._r_alive = this._alive.filter(u => u.team === TEAM.REPUBLIC);
+        this._c_alive = this._alive.filter(u => u.team === TEAM.CIS);
     },
 
     update: function() {
@@ -118,25 +124,15 @@ const battle = (ctx, units, turrets, field) => ({
         this.setDelta();
         // update which units are alive...
         this.setCaches();
-        // update all units
-        let L_units = this.units.length,
-            L_proj = this.projectiles.length,
-            L_melee = this.melees.length,
-            L_turret = this.turrets.length;
 
-        for (let i = 0; i < L_units; i++) {
-            this.units[i].update(this);
-        }
-        // update projectiles?
-        for (let i = 0; i < L_proj; i++) {
-            this.projectiles[i].update(this);
-        }
-        for (let i = 0; i < L_melee; i++) {
-            this.melees[i].update();
-        }
-        for (let i = 0; i < L_turret; i++) {
-            this.turrets[i].update(this);
-        }
+        let update_f = (element, i) => element.update(this);
+
+        this.units.forEach(update_f);
+        this.turrets.forEach(update_f);
+        this.spawners.forEach(update_f);
+        this.projectiles.forEach(update_f);
+        this.melees.forEach(update_f);
+
         // filter out obsolete objects.
         this.filter_objects();
         // finally, draw
@@ -148,25 +144,13 @@ const battle = (ctx, units, turrets, field) => ({
         // clears the screen
         draw.cls(this.ctx, this.field.width, this.field.height);
         // this.ctx.drawImage(this.bg_image, 0, 0, this.field.width, this.field.height);
-        let L_units = this.units.length,
-            L_proj = this.projectiles.length,
-            L_melee = this.melees.length,
-            L_turret = this.turrets.length;
+        let render_f = (element, i) => element.render(this.ctx);
 
-        // iterate over all units and render
-        for (let i = 0; i < L_units; i++) {
-            this.units[i].render(this.ctx);
-        }
-        // draw projectiles here
-        for (let i = 0; i < L_proj; i++) {
-            this.projectiles[i].render(this.ctx);
-        }
-        for (let i = 0; i < L_melee; i++) {
-            this.melees[i].render(this.ctx);
-        }
-        for (let i = 0; i < L_turret; i++) {
-            this.turrets[i].render(this.ctx);
-        }
+        // render in this order
+        this.units.forEach(render_f);
+        this.turrets.forEach(render_f);
+        this.projectiles.forEach(render_f);
+        this.melees.forEach(render_f);
 
         // add text to update timestep, number of units
         this.ctx.font = "30px Arial";

@@ -60,7 +60,7 @@ const ai_next_target = {
         let enemy = md.get_enemies(u.team),
             enemy_L = enemy.length;
 
-        if (enemy_L > 1) {
+        if (enemy_L > 0) {
             // calculate distance from each enemy.
             let closest_dist = 1500.0,
                 closest_index = 0;

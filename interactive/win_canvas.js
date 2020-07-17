@@ -1,36 +1,15 @@
-// define some globals here
-
 // whether HP are shown on units.
 let IS_HP_DISPLAYED = false;
 
-// global function to choose which template to run.
-function choose_template() {
-    let temp_obj = document.getElementById("sel1"),
-        temp_opt = temp_obj.options[temp_obj.selectedIndex].value;
-
-    if (temp_opt === "Opposite Aggressive") {
-        return BATTLE.OPPOSITE_AGGRESSIVE;
-    } else if (temp_opt === "Aggressor Defender") {
-        return BATTLE.ATTACKER_DEFENDER;
-    } else if (temp_opt === "Snipers' Nest") {
-        return BATTLE.SNIPERS_NEST;
-    } else if (temp_opt === "Jedi Defenders") {
-        return BATTLE.JEDI_DEFENDERS;
-    } else if (temp_opt === "Guerrilla Warfare") {
-        return BATTLE.GUERRILLA_WARFARE;
-    } else if (temp_opt === "Tower Defence") {
-        return BATTLE.TOWER_DEFENCE;
-    }
-}
-
 // cached inside the loading function to make it cleaner.
 window.onload = function() {
-    var canvas = document.getElementById("canvas"),
+    let canvas = document.getElementById("canvas"),
         start_but = document.getElementById("play"),
         pause_but = document.getElementById("pause"),
         loop_but = document.getElementById("loop"),
         update_but = document.getElementById("update_sim"),
         hp_check = document.getElementById("hp_bar"),
+        sim_templ = document.getElementById("sel1"),
         // button variables
         looping = false,
         paused = false,
@@ -44,8 +23,11 @@ window.onload = function() {
         // size of armies
         n1 = nrep_field.value,
         n2 = ncis_field.value,
-        use_template = choose_template(),
+        use_template = BATTLE_TEMPLATE.OPPOSITE_AGGRESSIVE,
         battle = use_template(ctx, n1, n2);
+
+    // load information into HTML selections for simulation templates
+    load_templates();
 
     // starts/resets the simulation
     start_but.addEventListener("click", reset_sim);
@@ -62,11 +44,18 @@ window.onload = function() {
 
     // log
     console.log(battle.units);
-    console.log(battle.droids);
-    console.log(battle.clones);
 
     // first draw
     battle.render();
+
+    function load_templates() {
+        Object.keys(btemplate_map).forEach((element, i) => {
+            let elem = document.createElement("option"),
+                node = document.createTextNode(element);
+            elem.appendChild(node);
+            sim_templ.appendChild(elem);
+        });
+    }
 
     function reset_sim(e) {
         // only reset if we haven't ran before, or still fighting, or time exceeded.
@@ -130,7 +119,7 @@ window.onload = function() {
         // should have access to 'var' variables as declared in win_canvas.js
         n1 = nrep_field.value;
         n2 = ncis_field.value;
-        use_template = choose_template();
+        use_template = btemplate_map[sim_templ.options[sim_templ.selectedIndex].value];
 
         draw.cls(ctx, battle.field.width, battle.field.height);
     }

@@ -1,9 +1,9 @@
 const unit_group = {
 
-    make_gaussian: function(unit, n, xmean, xstd, ymean, ystd,
+    make_gaussian: function(unit, n, xstart, xend, ystart, yend,
                             ai_type=AI.aggressive) {
-        let x = utils.gaussianArray(n, xmean, xstd),
-            y = utils.gaussianArray(n, ymean, ystd),
+        let x = utils.gaussianArray(n, xstart, xend),
+            y = utils.gaussianArray(n, ystart, yend),
             s = [];
 
         for (let i = 0; i < n; i++) {

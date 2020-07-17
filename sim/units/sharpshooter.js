@@ -5,7 +5,7 @@ class CloneSharpshooter extends Unit {
     constructor(i, x, y, ai) {
         super(i, x, y, UNIT.CloneSharpshooter.HP, UNIT.CloneSharpshooter.DAMAGE,
             UNIT.CloneSharpshooter.MVS, UNIT.CloneSharpshooter.RANGE,
-            UNIT.CloneSharpshooter.TEAM,UNIT.CloneSharpshooter.FIRERATE,
+            UNIT.CloneSharpshooter.TEAM, UNIT.CloneSharpshooter.FIRERATE,
             UNIT.CloneSharpshooter.DEFLECT, ai);
     }
 

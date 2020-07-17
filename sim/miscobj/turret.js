@@ -13,10 +13,6 @@ class Turret extends Combative {
         this.hit_radius = 15.0;
     }
 
-    isTargetAlive() {
-        return (this.target && this.target.hp > 0.0);
-    }
-
     isTargetInRange() {
         return (this._dist <= this.range);
     }
@@ -32,7 +28,7 @@ class Turret extends Combative {
     update(md) {
         // update the turret logic here
         this.updateToTarget();
-        // use the 'stand AI'
+        // use the 'stand AI' as a turret does not move
         AI.stand(this, md);
     }
 

@@ -31,12 +31,11 @@ class Melee extends Attack {
             ctx.fillStyle = "rgba({0}, {1}, {2}, 0.4)".format(this.color);
             ctx.moveTo(4, 4);
             ctx.lineTo(-4, -4);
-            if (this.tick < 3) {
-                // do nothing
-            } else if (this.tick < 7) {
+            if (this.tick >= 3) {
                 ctx.moveTo(4, -4);
                 ctx.lineTo(-4, 4);
-            } else if (this.tick < 10) {
+            }
+            if (this.tick >= 7) {
                 ctx.moveTo(4, -4);
                 ctx.lineTo(-4, 4);
                 ctx.moveTo(4, 0);

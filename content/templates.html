@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BattleSimulator Templates</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Here we have our css stylesheets -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="../style/view.css">
+    <!-- Here we have our imported javascript for jquery and bootstrap -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <!-- our scripts here -->
+    <script type="text/javascript" src="../interactive/win_glob.js"></script>
+</head>
+<body>
+
+<!-- navbar -->
+<nav class="navbar navbar-inverse" data-spy="affix" data-offset-top="197">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav">
+                <li><a href="../index.html"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+                <li><a href="unit.html"><span class="glyphicon glyphicon-user"></span> Unit</a></li>
+                <li class="active"><a href="#"><span class="glyphicon glyphicon-hdd"></span> Template</a></li>
+                <li><a href="license.html"><span class="glyphicon glyphicon-book"></span> License</a></li>
+                <li><a href="https://github.com/gregparkes/WebBattleSim"><span class="glyphicon glyphicon-circle-arrow-up"></span> GitHub</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Jumbotron -->
+<div class="container">
+    <div class="jumbotron">
+        <h2>BattleSim Templates for War</h2>
+        <p>Here we define what our 'default' template battle scenarios look like and how they will play out,
+        and give you opportunities to create your own template and play them out.</p>
+    </div>
+</div>
+
+<!-- default table -->
+<div class="container">
+    <h3>Default Templates</h3>
+    <div class="panel-group">
+        <div class="panel panel-success">
+            <div class="panel-heading"><h4>
+                <a data-toggle="collapse" href="#collapse3">Opposite Aggressive:</a>
+            </h4></div>
+            <div id="collapse3" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <p>This scenario has a basic conflict between clones and droids; both groups of units move
+                        towards in an aggressive manner until the last man/robot is standing.</p>
+                    <p><span class="text-info">
+                        N Clone Troopers (aggressive), N B1 Battledroids (aggressive)
+                    </span></p>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-success">
+            <div class="panel-heading"><h4>
+                <a data-toggle="collapse" href="#collapse4">Aggressor Defender:</a>
+            </h4></div>
+            <div id="collapse4" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <p>This scenario is similar to Opposite Aggressor, except one side simply stands ground and waits
+                    for the opponent to come forward.</p>
+                    <p><span class="text-info">
+                        N Clone Troopers (stand ground), N B1 Battledroids (aggressive)
+                    </span></p>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-success">
+            <div class="panel-heading"><h4>
+                <a data-toggle="collapse" href="#collapse5">Snipers' Nest:</a>
+            </h4></div>
+            <div id="collapse5" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <p>This scenario introduces <em>snipers</em> to the Republic side, having substantially
+                    higher range than normal droids, this really helps even the odds for the Republic defenders.</p>
+                    <p><span class="text-info">
+                        20 Clone Troopers (stand ground), 50 B1 Battledroids (aggressive), 4 Clone Sharpshooters (aggressive)
+                    </span></p>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-success">
+            <div class="panel-heading"><h4>
+                <a data-toggle="collapse" href="#collapse6">Jedi Defenders:</a>
+            </h4></div>
+            <div id="collapse6" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <p>To add to the specialty of the Republic, a team of Jedi Knights have landed against a
+                    sizeable force of droids, including B2 Battledroids. Jedi come with the ability to deflect
+                    almost every blaster shot, so how will they fare?</p>
+                    <p><span class="text-info">
+                        50 B1 Battledroids (aggressive), 10 Jedi (aggressive), 10 B2 Battledroids (aggressive)
+                    </span></p>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-success">
+            <div class="panel-heading"><h4>
+                <a data-toggle="collapse" href="#collapse7">Guerrilla Warfare:</a>
+            </h4></div>
+            <div id="collapse7" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <p>The droids have managed to outmaneuvre the Republic and land, delivering a two-pronged
+                    attack to the Republic forces, with sniper assistance, can they survive?</p>
+                    <p><span class="text-info">
+                        50 B1 Battledroids (aggressive), 10 B2 Battledroids (aggressive), 30 Clone Troopers (Hit and Run),
+                        2 Clone Sharpshooters (aggressive)
+                    </span></p>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-success">
+            <div class="panel-heading"><h4>
+                <a data-toggle="collapse" href="#collapse8">Tower Defense:</a>
+            </h4></div>
+            <div id="collapse8" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <p>Some towers have been sighted by the Republic forces in the corner of the map,
+                    how will the CIS offensive fare when under constant enemy fire?</p>
+                    <p><span class="text-info">
+                        50 B1 Battledroids (aggressive), 15 Clone Troopers (Hit and Run), 4 Republic Towers,
+                        1 CIS Tower
+                    </span></p>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-success">
+            <div class="panel-heading"><h4>
+                <a data-toggle="collapse" href="#collapse9">Overwhelming Odds:</a>
+            </h4></div>
+            <div id="collapse9" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <p>Wave after wave of droids will soon descend from their landing craft, using the
+                    new 'Spawner' module of the simulation. How long can
+                        the heroes of the Republic hold out for?</p>
+                    <p><span class="text-info">
+                        25 Clone Troopers (aggressive), 1 Jedi (aggressive),
+                        5 B1 Battledroids (aggressive), 1 CIS spawner (B1 Battledroid)
+                    </span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- footer -->
+<footer class="container-fluid text-center">
+    <p>Note that this website requires Javascript to run. All rights reserved. Ensure that any use of this material is appropriately referenced
+        and in compliance with the <a href="license.html"><span style="color:white;">license</span></a>.</p>
+</footer>
+
+</body>
+</html>
