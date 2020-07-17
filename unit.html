@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>BattleSimulator Unit Roster</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Here we have our css stylesheets -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="view.css">
+    <!-- Here we have our imported javascript for jquery and bootstrap -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>#
+    <!-- unit information to draw them -->
+    <script type="text/javascript" src="sim/utils.js" defer></script>
+    <script type="text/javascript" src="sim/draw.js" defer></script>
+    <script type="text/javascript" src="sim/spritable.js" defer></script>
+    <script type="text/javascript" src="sim/attack/attack.js" defer></script>
+    <script type="text/javascript" src="sim/attack/projectile.js" defer></script>
+    <script type="text/javascript" src="sim/attack/melee.js" defer></script>
+    <script type="text/javascript" src="sim/attack/att_types.js" defer></script>
+    <script type="text/javascript" src="sim/units/unit.js" defer></script>
+    <script type="text/javascript" src="sim/units/jedi.js" defer></script>
+    <script type="text/javascript" src="sim/units/clonetrooper.js" defer></script>
+    <script type="text/javascript" src="sim/units/b1battledroid.js" defer></script>
+    <script type="text/javascript" src="sim/units/b2battledroid.js" defer></script>
+    <script type="text/javascript" src="sim/units/sharpshooter.js" defer></script>
+    <!-- add in global unit data -->
+    <script src="sim/glob_elements.js"></script>
+    <script src="win_unit.js" defer></script>
+</head>
+<body>
+
+<!-- navbar -->
+<nav class="navbar navbar-inverse" data-spy="affix" data-offset-top="197">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav">
+                <li><a href="index.html"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+                <li class="active"><a href="#"><span class="glyphicon glyphicon-user"></span> Unit</a></li>
+                <li><a href="license.html"><span class="glyphicon glyphicon-book"></span> License</a></li>
+
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Jumbotron -->
+<div class="container">
+    <div class="jumbotron">
+                <h2>BattleSim Unit Roster</h2>
+                <p>Units are given in terms of their base attributes and stats. Further details later on
+                    will be given as to how these attributes are converted into visible outputs
+                    in the animation.</p>
+    </div>
+</div>
+
+<!-- table -->
+<div class="container">
+    <h4>Unit Specifics</h4>
+    <div class="table-responsive">
+        <table class="table table-hover" id="unit_table"></table>
+    </div>
+</div>
+
+<footer class="container-fluid text-center">
+    <p>Note that this website requires Javascript to run. All rights reserved. Ensure that any use of this material is appropriately referenced
+        and in compliance with the <a href="license.html"><span style="color:white;">license</span></a>.</p>
+</footer>
+
+</body>
+</html>

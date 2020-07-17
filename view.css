@@ -1,0 +1,41 @@
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+footer {
+    background-color: #555;
+    color: white;
+    padding: 10px;
+}
+
+a, a:hover {
+    color: black;
+}
+
+canvas {
+    border: 1px solid #f1f1f1;
+    width: 100%;
+}
+
+.sidepan {
+    background-color: #f1f1f1;
+    height: 100%;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.affix {
+    top: 0;
+    width: 100%;
+    z-index: 9999 !important;
+}
+
+.affix + .container-fluid {
+    padding-top: 70px;
+}
+
+.jumbotron {
+    background-color: #f8ffee;
+}

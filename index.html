@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>BattleSimulator</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Here we have our css stylesheets -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="view.css">
+    <!-- Here we have our imported javascript for jquery and bootstrap -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+    <script>
+        $(document).ready(function(){
+            $('[data-toggle="popover"]').popover();
+        });
+    </script>
+    <script>var exports = {};</script>
+    <!-- Here we have our local javascript code for sim -->
+    <script type="text/javascript" src="sim/utils.js" defer></script>
+    <script type="text/javascript" src="sim/draw.js" defer></script>
+    <script type="text/javascript" src="sim/field.js" defer></script>
+    <script type="text/javascript" src="sim/collide.js" defer></script>
+    <script type="text/javascript" src="sim/spritable.js" defer></script>
+    <script type="text/javascript" src="sim/units/unit.js" defer></script>
+    <script type="text/javascript" src="sim/units/jedi.js" defer></script>
+    <script type="text/javascript" src="sim/units/clonetrooper.js" defer></script>
+    <script type="text/javascript" src="sim/units/b1battledroid.js" defer></script>
+    <script type="text/javascript" src="sim/units/b2battledroid.js" defer></script>
+    <script type="text/javascript" src="sim/units/sharpshooter.js" defer></script>
+    <script type="text/javascript" src="sim/glob_elements.js" defer></script>
+    <script type="text/javascript" src="sim/ai.js" defer></script>
+    <script type="text/javascript" src="sim/unit_group.js" defer></script>
+    <script type="text/javascript" src="sim/battle.js" defer></script>
+    <script type="text/javascript" src="sim/battle_template.js" defer></script>
+    <script type="text/javascript" src="sim/attack/attack.js" defer></script>
+    <script type="text/javascript" src="sim/attack/projectile.js" defer></script>
+    <script type="text/javascript" src="sim/attack/melee.js" defer></script>
+    <script type="text/javascript" src="sim/attack/att_types.js" defer></script>
+    <script type="text/javascript" src="sim/miscobj/turret.js" defer></script>
+    <!-- Here we have our local javascript code for the main window -->
+    <script type="text/javascript" src="win_canvas.js" defer></script>
+</head>
+<body>
+<!-- navbar -->
+<nav class="navbar navbar-inverse" data-spy="affix" data-offset-top="197">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div class="collapse navbar-collapse" id="myNavbar">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#"><span class="glyphicon glyphicon-home"></span> Home</a></li>
+                <li><a href="unit.html"><span class="glyphicon glyphicon-user"></span> Unit</a></li>
+                <li><a href="license.html"><span class="glyphicon glyphicon-book"></span> License</a></li>
+
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- jumbotron with carousel -->
+<div class="container">
+    <div class="jumbotron">
+        <div class="row">
+            <div class="col-lg-8">
+                <h1>BattleSimulator</h1>
+                <p>An extensive game simulator and animated visualizer for 2D battles drawn with inspiration
+                    from Totally Accurate Battle Simulator (TABS).
+                    Define units and learn patterns of behaviour to train Machine Learning algorithms. See our
+                    <a href="https://github.com/gregparkes/BattleSimulator">GitHub page</a>
+                    for more details, including the Python version.</p>
+            </div>
+            <div class="col-lg-4">
+                <div class="container">
+                    <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                        <!-- Indicators -->
+                        <ol class="carousel-indicators">
+                            <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+                            <li data-target="#myCarousel" data-slide-to="1"></li>
+                            <li data-target="#myCarousel" data-slide-to="2"></li>
+                        </ol>
+                        <!-- Wrapper for slides -->
+                        <div class="carousel-inner">
+                            <div class="item active">
+                                <img src="res/quiver1.svg" alt="Image 1" style="width:100%;">
+                            </div>
+                            <div class="item">
+                                <img src="res/quiver2.svg" alt="Image 2" style="width:100%;">
+                            </div>
+                            <div class="item">
+                                <img src="res/main.gif" alt="Image 3" style="width:100%;">
+                            </div>
+                        </div>
+                        <!-- Left and right controls -->
+                        <a class="left carousel-control" href="#myCarousel" data-slide="prev">
+                            <span class="glyphicon glyphicon-chevron-left"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="right carousel-control" href="#myCarousel" data-slide="next">
+                            <span class="glyphicon glyphicon-chevron-right"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- canvas (left) with simulation parameters (right) -->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-9" id="canvas-container">
+            <canvas id="canvas">Your browser doesn't support canvas</canvas>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3>Simulation Commands</h3>
+                </div>
+                <div class="panel-body">
+                    <button type="button" class="btn btn-primary" id="play">
+                        Restart
+                    </button>
+                    <button type="button" class="btn btn-primary" id="pause">
+                        Pause
+                    </button>
+                    <button type="button" class="btn btn-primary" id="loop">
+                        Loop
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="panel-group">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3>Simulation Parameters</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <div class="panel-group">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4><a data-toggle="collapse" href="#collapse1">Select a Template:
+                                            <span class="glyphicon glyphicon-arrow-down"></span></a></h4>
+                                    </div>
+                                    <div id="collapse1" class="panel-collapse collapse">
+                                        <div class="panel-body">
+                                            <div class="form-group">
+                                                <p class="text-info text-center">Template types</p>
+                                                <select class="form-control" id="sel1">
+                                                    <option>Opposite Aggressive</option>
+                                                    <option>Aggressor Defender</option>
+                                                    <option>Snipers' Nest</option>
+                                                    <option>Jedi Defenders</option>
+                                                    <option>Guerrilla Warfare</option>
+                                                    <option>Tower Defence</option>
+                                                </select>
+                                            </div>
+                                            <div class="row">
+                                                <div class="form-group col-lg-6">
+                                                    <label for="nrep">
+                                                        <a href="#" data-toggle="tooltip" title="The number of units to specify for the Republic">
+                                                            Republic:</a>
+                                                    </label>
+                                                    <input type="number" class="form-control" id="nrep" placeholder="0..1000" value="20">
+                                                </div>
+                                                <div class="form-group col-lg-6">
+                                                    <label for="ncis">
+                                                        <a href="#" data-toggle="tooltip" title="The number of units to specify for the CIS">
+                                                            CIS:</a>
+                                                    </label>
+                                                    <input type="number" class="form-control" id="ncis" placeholder="0..1000" value="25">
+                                                </div>
+                                            </div>
+                                            <a href="#" title="Template definition"
+                                               data-toggle="popover" data-placement="bottom" onclick="preventDefault()"
+                                               data-content="Templates are predefined battles or scenarios that convey the scope of the project.">What are templates?</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        <h4><a data-toggle="collapse" href="#collapse2">In-Game Mechanics:
+                                            <span class="glyphicon glyphicon-arrow-down"></span></a></h4>
+                                    </div>
+                                    <div id="collapse2" class="panel-collapse collapse">
+                                        <div class="panel-body">
+                                            <div class="form-group">
+                                                <div class="checkbox">
+                                                    <label><input type="checkbox" id="unit_collision">Unit-Unit Collision</label>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label><input type="checkbox" id="hp_bar">Display HP</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-primary btn-lg" id="update_sim">
+                                    Update Simulation
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="container-fluid text-center">
+    <p>Note that this website requires Javascript to run. All rights reserved. Ensure that any use of this material is appropriately referenced
+        and in compliance with the <a href="license.html"><span style="color:white;">license</span></a>.</p>
+</footer>
+
+</body>
+</html>
