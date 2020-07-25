@@ -15,8 +15,24 @@ const utils = {
             ny = (cos * dy) - (sin * dx) + cy;
         return [nx, ny];
     },
+    uniform: function(a, b) {
+        return Math.random() * (b - a) + a;
+    },
     randomInt: function(min, max) {
+        // returns min... max-1
         return Math.floor(min + Math.random() * (max - min + 1));
+    },
+    ddroll: function(rname) {
+        // uses the D&D roll number system, e.g "1d20", for one 20-sided die, "2d8" for 8-sided 2 dice +
+        let res = rname.split("d", 2),
+            ndie = parseInt(res[0]),
+            nsides = parseInt(res[1]),
+            _sum = 0.0;
+
+        for (let i = 0; i < ndie; i++) {
+            _sum += (utils.randomInt(0, nsides) + 1);
+        }
+        return _sum;
     },
     fisher_yates: function(points) {
         // shuffles an array
@@ -39,7 +55,7 @@ const utils = {
         return utils.lerp(utils.norm(value, sourceMin, sourceMax), destMin, destMax);
     },
     gauss1: function(start, end) {
-        let n = 10,
+        let n = 20,
             rand = utils.repeatn(Math.random, n).reduce((x, y) => x + y);
         return Math.floor(start + (rand / n) * (end - start + 1)) + 1;
     },

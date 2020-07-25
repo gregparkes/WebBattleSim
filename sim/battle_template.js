@@ -32,8 +32,8 @@ const BATTLE_TEMPLATE = {
     SNIPERS_NEST: function(ctx, n1=20, n2=25) {
         let [w, h] = set_dims(),
             field = Field(w, h),
-            g1 = unit_group.make_gaussian(CloneTrooper, 20, w * .3, w * .3 + 50,
-                h * .3, 150, AI.stand),
+            g1 = unit_group.make_gaussian(CloneTrooper, 7, w * .3, w * .3 + 200,
+                h * .3, h*.3 + 200, AI.stand),
             g2 = unit_group.make_gaussian(B1Battledroid, 50, w * .9, w * .9 + 25,
                 h * .8, 300, AI.aggressive),
             g3 = unit_group.make_uniform(CloneSharpshooter, 4, 150, 170,
@@ -91,8 +91,9 @@ const BATTLE_TEMPLATE = {
                 h * .4, h * .4 + 50, AI.aggressive),
             droids = unit_group.make_gaussian(B1Battledroid, 5, w * .8, w * .8 + 50,
             h * .7, w * .7 + 50, AI.aggressive),
-            other = [new Jedi(i, w*.4, h*.4+50, AI.aggressive),
-                new Spawner(UNIT.B1Battledroid, 0.06)],
+            other = [new Jedi(0, w*.4, h*.4+50, AI.aggressive),
+                new WallSpawner(UNIT.B1Battledroid, 0.03, "top"),
+                new WallSpawner(UNIT.B1Battledroid, 0.03, "bottom")],
             objs = clones.concat(droids, other);
         return battle(ctx, objs, field);
     }

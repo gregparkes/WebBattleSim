@@ -46,7 +46,7 @@
             <ul class="nav navbar-nav">
                 <li><a href="../index.html"><span class="glyphicon glyphicon-home"></span> Home</a></li>
                 <li class="active"><a href="#"><span class="glyphicon glyphicon-user"></span> Unit</a></li>
-                <li><a href="templates.html"><span class="glyphicon glyphicon-hdd"></span> Template</a></li>
+                <li><a href="information.html"><span class="glyphicon glyphicon-hdd"></span> Info</a></li>
                 <li><a href="license.html"><span class="glyphicon glyphicon-book"></span> License</a></li>
                 <li><a href="https://github.com/gregparkes/WebBattleSim"><span class="glyphicon glyphicon-circle-arrow-up"></span> GitHub</a></li>
             </ul>
@@ -69,6 +69,106 @@
     <h4>Unit Specifics</h4>
     <div class="table-responsive">
         <table class="table table-hover" id="unit_table"></table>
+    </div>
+</div>
+
+<!-- default table -->
+<div class="container">
+    <h4>Explanation of Attributes</h4>
+    <div class="panel-group" id="accordion">
+        <div class="panel panel-info">
+            <div class="panel-heading"><h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">Attack:</a>
+            </h4></div>
+            <div id="collapse1" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <p>Attack is the primary stat that determines the units' ability to hit and deal damage.
+                        Attack is the base chance of an attack to be initiated. If Attack + 1d6 roll is greater
+                        than or equal to
+                        the opponents Dexterity, the attack proceeds. Attack also determines the <em>base value</em>
+                        of damage that the unit will deliver. Attack + 2d8 damage is applied to the opponent, who rolls
+                        a Dexterity + 1d8 defence roll in damage mitigation. </p>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-info">
+            <div class="panel-heading"><h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapse2">Dexterity:</a>
+            </h4></div>
+            <div id="collapse2" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <p>Dexterity is the primary stat that determines the units' ability to dodge and defend against attacks.
+                        Dexterity is the base chance to dodge an attack initiation. If Dexterity is greater than the opponents'
+                        Attack + 1d6 roll, the attack is avoided. Dexterity also determines the <em>base value</em>
+                        of damage avoidance that the opponent unit will deliver. A Dexterity + 1d8 defence roll mitigates against
+                        an opponents' Attack + 2d8 damage roll. </p>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-info">
+            <div class="panel-heading"><h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapse3">Constitution:</a>
+            </h4></div>
+            <div id="collapse3" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <p>Constitution is the primary stat that determines the units' hit points (HP). The number of hit points
+                    is determined as 20 + (7 x CON) attribute. </p>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-info">
+            <div class="panel-heading"><h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapse4">Movement Speed:</a>
+            </h4></div>
+            <div id="collapse4" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <p>Movement speed determines in the number of pixels-per-frame how fast units can move
+                    across the field. </p>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-info">
+            <div class="panel-heading"><h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapse5">Range:</a>
+            </h4></div>
+            <div id="collapse5" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <p>Range determines how close a unit in distance of pixels needs
+                        to be before it can begin the attack phase.
+                    Melee attackers nearly always have a substantially reduced range compared to projectile-firing
+                    units. </p>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-info">
+            <div class="panel-heading"><h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapse6">Fire Rate:</a>
+            </h4></div>
+            <div id="collapse6" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <p>Fire rate determines the probability of initiating an attack object AFTER the hit roll. Thus,
+                    for example a fire rate of 0.03 means that there is a 3% chance the unit, post-hit roll, will
+                    initiate a true attack, using damage and dexterity rolls for damage dealing. The primary purpose
+                    of this attribute is to slow down the simulation and make it more aesthetic. </p>
+                </div>
+            </div>
+        </div>
+        <div class="panel panel-info">
+            <div class="panel-heading"><h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapse7">Deflection:</a>
+            </h4></div>
+            <div id="collapse7" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <p>Some units have the ability to deflect incoming attacks. This only happens when deflection rate is
+                    higher than zero, and only applies to projectiles. If a +2d8 roll is less than or equal to the units'
+                        deflection attribute, the attack
+                    is successfully deflected. The deflected projectile, will change allegiance and move in the opposite
+                        trajectory of the original attack, but has only 80% of its previous damage. </p>
+                </div>
+            </div>
+        </div>
+        <!-- more go here -->
+
     </div>
 </div>
 

@@ -62,11 +62,12 @@ class Sprite extends CanvObj {
 
 class Combative extends Sprite {
 
-    constructor(i, x, y, team, hp) {
+    constructor(i, x, y, team, con) {
         super(x, y, team);
         // set ID and hit points
         this.id = i;
-        this.hp = this.MAX_HP = hp;
+        // constitution converted directly to HP
+        this.hp = this.MAX_HP = 20 + (con * 7);
         // target set to null
         this.target = null;
         // a bunch of hidden parameters for direcitonal derivatives
@@ -95,7 +96,7 @@ class Combative extends Sprite {
         }
     }
 
-    moveToTarget(md, modifier, towards=true) {
+    moveToTarget(md, modifier=1, towards=true) {
         if (towards) {
             this.x += this._nddx * modifier;
             this.y += this._nddy * modifier;

@@ -5,7 +5,7 @@ class Spawner extends CanvObj {
     this object gains access to the update method and spawns in units at a certain rate for a faction
     there are different types of spawners as shown in derivative js files.
      */
-    constructor(unit, rate_prob, n=Infinity, start=0, ) {
+    constructor(unit, rate_prob, n=Infinity, start=0) {
         /*
         Receives a unit class, number of units to spawn, a start time (as t), the rate of spawning as a probability (t).
          */
@@ -43,4 +43,41 @@ class Spawner extends CanvObj {
             this.alive = false;
         }
     }
+}
+
+// WallSpawner, spawns units from one of the 4 walls of the canvas.
+
+class WallSpawner extends Spawner {
+    /*
+    spawns units from one of the 4 walls of the canvas instead of randomly anywhere
+
+    choose from {'left', 'right', 'top', 'bottom'} in terms of `wall` parameter
+     */
+    constructor(unit, rate_prob, wall = "left", n=Infinity, start=0) {
+        super(unit, rate_prob, n, start);
+        // x start, x end, y start, y end
+        this.wall = wall;
+    }
+
+    spawn(md) {
+        let i = md.units.length,
+            x = 10,
+            y = 10;
+
+        if (this.wall === "left") {
+            x = 10;
+            y = utils.uniform(10, md.field.height - 10);
+        } else if (this.wall === "right") {
+            x = md.field.width - 10;
+            y = utils.uniform(10, md.field.height - 10);
+        } else if (this.wall === "top") {
+            x = utils.uniform(10, md.field.width - 10);
+            y = 10;
+        } else if (this.wall === "bottom") {
+            x = utils.uniform(10, md.field.width - 10);
+            y = md.field.height - 10;
+        }
+        md.units.push(new this.unit(i, x, y, AI.aggressive));
+    }
+
 }

@@ -7,15 +7,16 @@ const UNITAITYPE = {
 // A Unit is an object that can move, attack, defend and in general has a large, diverse set of
 // capabilities.
 
-
 class Unit extends Combative {
 
-    constructor(i, x, y, hp, damage, mvs, range, team, fire_rate, dflr, ai) {
+    constructor(i, x, y, attack, dex, con, mvs, range,
+                team, fire_rate, dflr, ai) {
         // call element
-        super(i, x, y, team, hp);
+        super(i, x, y, team, con);
         // attributes
         this.hit_radius = 8;
-        this.damage = damage;
+        this.atk = attack;
+        this.dex = dex;
         this.mvs = mvs;
         this.range = range;
         this.fire_rate = fire_rate;
@@ -41,7 +42,8 @@ class Unit extends Combative {
     _unit_collision_check(md, towards=true) {
         // iterate over every alive unit and check (assuming not us) whether there is a single circle collision
         let collision_objs = md._alive.filter(e =>
-            ((this.id !== e.id) && collide.circle_circle(this.x, this.y, this.hit_radius * .7, e.x, e.y, e.hit_radius*.7))
+            ((this.id !== e.id) && collide.circle_circle(this.x, this.y, this.hit_radius * .7,
+                e.x, e.y, e.hit_radius*.7))
         )
         if (collision_objs.length > 0) {
             // move away from the first collided object
@@ -71,21 +73,37 @@ class Unit extends Combative {
     }
     
     attack(md) {
-        if (this.atk_type === AttackType.PROJECTILE) {
-            if (Math.random() < this.fire_rate) {
-                md.projectiles.push(new Projectile(
-                    this.x, this.y, this.team, this.damage, this._nddx, this._nddy,
-                    this.range));
+        // make an attack role of 2d8 to add to a potential attack, {2-16}
+        let hit_roll = utils.ddroll("1d6"),
+            att_roll = utils.ddroll("2d8"),
+            def_roll = utils.ddroll("1d8");
+
+        // see if our damage roll overcomes the defence roll
+        if (this.atk + hit_roll >= this.target.dex) {
+            // attack proceeds
+            // calculate modified damage
+            let mod_damage = (this.atk + att_roll) - (this.target.dex + def_roll);
+            // make sure mod_damage is at least 1
+            if (mod_damage <= 0) {
+                mod_damage = 1;
             }
-        } else if (this.atk_type === AttackType.MELEE) {
-            if (Math.random() < this.fire_rate) {
-                // do a swing attack..
-                md.melees.push(new Melee(
-                    this.target.x, this.target.y, this.team, this.damage, this.target
-                ));
+            // create an object to handle this damage output
+            if (this.atk_type === AttackType.PROJECTILE) {
+                if (Math.random() < this.fire_rate) {
+                    md.projectiles.push(new Projectile(
+                        this.x, this.y, this.team, mod_damage, this._nddx, this._nddy,
+                        this.range));
+                }
+            } else if (this.atk_type === AttackType.MELEE) {
+                if (Math.random() < this.fire_rate) {
+                    // do a swing attack..
+                    md.melees.push(new Melee(
+                        this.target.x, this.target.y, this.team, mod_damage, this.target
+                    ));
+                }
+            } else {
+                alert("Attack type'" + this.atk_type + "' not recognized");
             }
-        } else {
-            alert("Attack type'" + this.atk_type + "' not recognized");
         }
     }
     

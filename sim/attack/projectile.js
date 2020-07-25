@@ -23,7 +23,7 @@ class Projectile extends Attack {
     re_direct() {
         // this method is called when the projectile is re-directed.
         // slightly reduce damage and range
-        this.damage *= 0.7;
+        this.damage *= 0.8;
         // projectile switches team
         this._switch_team();
         // if this attack damage is below 0, de-activate
@@ -47,15 +47,12 @@ class Projectile extends Attack {
     }
 
     has_collided(u) {
-        // if unit deflect_range is greater than 0, we have to factor that
-        if (u.dflr > 0.0) {
-            // roll chance to deflect
-            if (Math.random() < u.dflr) {
-                // then re-direct the attack
-                this.re_direct();
-            } else {
-                this.dealDamage(u);
-            }
+        // {2-16}
+        let deflect_roll = utils.ddroll("2d8");
+        // roll chance to deflect
+        if (deflect_roll <= u.dflr) {
+            // then re-direct the attack
+            this.re_direct();
         } else {
             this.dealDamage(u);
         }

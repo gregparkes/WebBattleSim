@@ -16,6 +16,8 @@ const battle = (ctx, objects, field) => ({
     freezedelta: 1.,
     // running / frame-based
     running: false,
+    // define a minimum and maximum frame run
+    T_MIN: 100,
     T_MAX: 2000,
     // object array for all objects
     objects: objects,
@@ -65,7 +67,7 @@ const battle = (ctx, objects, field) => ({
     },
 
     anim_continue: function() {
-        return (this.t < this.T_MAX && this.has_alive_units());
+        return ((this.t < this.T_MIN) | (this.t < this.T_MAX && this.has_alive_units()));
     },
 
     has_alive_units: function() {
@@ -125,7 +127,7 @@ const battle = (ctx, objects, field) => ({
         // update which units are alive...
         this.setCaches();
 
-        let update_f = (element, i) => element.update(this);
+        let update_f = (element) => element.update(this);
 
         this.units.forEach(update_f);
         this.turrets.forEach(update_f);

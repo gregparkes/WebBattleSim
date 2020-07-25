@@ -77,7 +77,7 @@ window.onload = function() {
     }
 
     let unittab = document.getElementById("unit_table"),
-        unitattrs = ["NAME","TEAM","HP","DAMAGE","MVS",
+        unitattrs = ["NAME","TEAM","ATTACK","DEX","CON","MVS",
                      "RANGE", "FIRERATE", "DEFLECT"];
 
     generateTableHead(unittab);
