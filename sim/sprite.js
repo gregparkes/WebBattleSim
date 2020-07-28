@@ -18,10 +18,6 @@ class CanvObj {
         // your code here
     }
 
-    render(ctx) {
-        // your code here
-    }
-
 }
 
 
@@ -48,10 +44,23 @@ class Sprite extends CanvObj {
 
     // automatic bounds checking method to field
     bounds_check(md) {
-        if (this.x < 10) {this.x = 10; }
-        if (this.y < 10) {this.y = 10; }
-        if (this.x > md.field.width - 20) {this.x = md.field.width - 20; }
-        if (this.y > md.field.height - 20) {this.y = md.field.height - 20; }
+        if (md.field.fixed) {
+            // if the battlefield has hard boundaries...
+            if (this.x < 10) {this.x = 10; }
+            if (this.y < 10) {this.y = 10; }
+            if (this.x > md.field.width - 10) {this.x = md.field.width - 10; }
+            if (this.y > md.field.height - 10) {this.y = md.field.height - 10; }
+        } else {
+            // we can 'loop' the units to the otherside of the field
+            if (this.x < 10) {this.x = md.field.width - 10; }
+            if (this.y < 10) {this.y = md.field.height - 10; }
+            if (this.x > md.field.width - 10) {this.x = 10; }
+            if (this.y > md.field.height - 10) {this.y = 10; }
+        }
+    }
+
+    render(ctx) {
+        // your code here
     }
 
 }
@@ -122,6 +131,16 @@ class Combative extends Sprite {
 
     isTargetAlive() {
         return (this.target && this.target.hp > 0.0);
+    }
+
+    orientTo(ctx, func, ...args) {
+        // save the context, set position and rotation
+        ctx.save();
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this._angle);
+        // uses a custom drawing function which takes f(ctx, ...args)
+        func(ctx, ...args);
+        ctx.restore();
     }
 
 }

@@ -45,6 +45,15 @@ const utils = {
         }
         return points;
     },
+    clamp: function(v, min, max) {
+        if (v < min) {
+            return min;
+        } else if (v > max) {
+            return max;
+        } else {
+            return v;
+        }
+    },
     norm: function(value, min, max) {
         return (value - min) / (max - min);
     },

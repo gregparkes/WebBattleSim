@@ -4,6 +4,5 @@ class Attack extends Sprite {
     constructor(x, y, team, damage) {
         super(x, y, team);
         this.damage = damage;
-        this.active = true;
     }
 }

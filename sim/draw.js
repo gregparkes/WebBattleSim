@@ -37,7 +37,6 @@ const draw = {
         ctx.beginPath();
         // @ts-ignore
         ctx.fillStyle = "rgba({0}, {1}, {2}, 1.0)".format(color);
-
         ctx.arc(x, y, size, 0, Math.PI*2, false);
         ctx.fill();
     },
