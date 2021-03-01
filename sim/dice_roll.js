@@ -1,8 +1,10 @@
 const Dice = {
+    /* Rolls a 1d6 */
     d1d6: function(){
         return utils.randomInt(0, 6) + 1;
     },
 
+    /* Rolls a 1d8 */
     d1d8: function(){
         return utils.randomInt(0, 8) + 1;
     },

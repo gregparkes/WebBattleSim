@@ -60,13 +60,15 @@ const utils = {
     lerp: function(norm, min, max) {
         return (max - min) * norm + min;
     },
-    map: function(value, sourceMin, sourceMax, destMin, destMax) {
-        return utils.lerp(utils.norm(value, sourceMin, sourceMax), destMin, destMax);
-    },
     gauss1: function(start, end) {
-        let n = 20,
-            rand = utils.repeatn(Math.random, n).reduce((x, y) => x + y);
-        return Math.floor(start + (rand / n) * (end - start + 1)) + 1;
+        let r = 0,
+            v = 6;
+        for (let i = v; i > 0; i--)
+        {
+            r += Math.random();
+        }
+        return (r / v) * (end - start) + start;
+
     },
     uniformArray: function(n, a=0, b=1) {
         // @ts-ignore

@@ -20,8 +20,7 @@ class Turret extends Combative {
     attack(md) {
         if (Math.random() < this.fire_rate) {
             md.projectiles.push(new Projectile(
-                this.x, this.y, this.team, this.damage, this._nddx, this._nddy,
-                this.range, 5., 5.));
+                this, this.damage,5., 5.));
         }
     }
 
@@ -47,7 +46,5 @@ class Turret extends Combative {
         ctx.fillRect(0, -2.5, 20, 5);
         ctx.restore();
     }
-
-
 
 }

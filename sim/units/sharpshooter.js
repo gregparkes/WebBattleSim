@@ -8,14 +8,14 @@ class CloneSharpshooter extends Unit {
             UNIT.CloneSharpshooter.MVS, UNIT.CloneSharpshooter.RANGE,
             UNIT.CloneSharpshooter.TEAM, UNIT.CloneSharpshooter.FIRERATE,
             UNIT.CloneSharpshooter.DEFLECT, ai);
+        this.crit_modifier = 3.0;
     }
 
     // sharpshooter projectiles move considerably faster.
     attack(md) {
-        if (Math.random() < this.fire_rate) {
-            md.projectiles.push(new Projectile(
-                this.x, this.y, this.team, this.atk, this._nddx, this._nddy,
-                this.range, 10., 2.));
+        let update_damage = this.roll_damage();
+        if ((update_damage > 0.0) && (Math.random() < this.fire_rate)) {
+            md.projectiles.push(new Projectile(this, update_damage, 10., 2.));
         }
     }
     // draw a snipers crosshair on top

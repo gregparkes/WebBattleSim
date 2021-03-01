@@ -38,12 +38,16 @@ const battle = (ctx, objects, field) => ({
     spawners: objects.filter(s => s instanceof Spawner),
     // turrets
     turrets: objects.filter(u => u instanceof Turret),
+    // crit texts
+    crits: [],
 
     // START FUNCTION to START the BATTLE
     start: function() {
         if (!this.running) {
             // check whether mechanics are set
             this.UU_COLLISION = document.getElementById("unit_collision").checked;
+            // set the t_max
+            this.T_MAX = document.getElementById("sim_max").value;
             // start running
             this.running = true;
             this.t = 0;
@@ -96,11 +100,12 @@ const battle = (ctx, objects, field) => ({
         }
     },
 
-    filter_objects: function(every_t = 15) {
+    filter_objects: function(every_t = 100) {
         // go through and filter out the non-alive objects every so often
         if (this.t % every_t === 0) {
             this.projectiles = this.projectiles.filter(p => p.alive);
             this.melees = this.melees.filter(m => m.alive);
+            this.crits = this.crits.filter(m => m.alive);
         }
     },
 
@@ -138,6 +143,8 @@ const battle = (ctx, objects, field) => ({
         // finally attacks and projectiles.
         this.projectiles.forEach(update_f);
         this.melees.forEach(update_f);
+        // crits
+        this.crits.forEach(update_f);
 
         // filter out obsolete objects.
         this.filter_objects();
@@ -157,6 +164,8 @@ const battle = (ctx, objects, field) => ({
         this.turrets.forEach(render_f);
         this.projectiles.forEach(render_f);
         this.melees.forEach(render_f);
+        // update crits
+        this.crits.forEach(render_f);
 
         // add text to update timestep, number of units
         this.ctx.font = "30px Arial";

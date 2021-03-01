@@ -2,18 +2,18 @@
 
 class Projectile extends Attack {
 
-    constructor(x, y, team, dmg, dx, dy, range, vel=5., radius=2.5) {
+    constructor(source, damage, vel=5., radius=2.5, is_crit = false) {
         // call constructor attack
-        super(x, y, team, dmg);
+        super(source, damage, is_crit);
         // define extras to a projectile
-        this.dx = dx;
-        this.dy = dy;
+        this.dx = source._nddx;
+        this.dy = source._nddy;
         this.vel = vel;
-        this.sx = x;
-        this.sy = y;
+        this.sx = source.x;
+        this.sy = source.y;
         // size of the projectile (ball)
         this.hit_radius = radius;
-        this.max_range = range * 1.3;
+        this.max_range = source.range * 1.3;
     }
 
     _in_range() {
@@ -48,13 +48,17 @@ class Projectile extends Attack {
 
     has_collided(u) {
         // {2-16}
-        let deflect_roll = Dice.d2d8();
         // roll chance to deflect
-        if (deflect_roll <= u.dflr) {
+        if (Dice.d2d8() <= u.dflr) {
             // then re-direct the attack
             this.re_direct();
         } else {
+            // does this projectile contain a crit?
             this.dealDamage(u);
+            if (this.is_crit)
+            {
+                this._hit_crit_target = u;
+            }
         }
     }
 
@@ -72,6 +76,10 @@ class Projectile extends Attack {
             if (is_collided) {
                 // perform some calculation based on the unit.
                 this.has_collided(e);
+                // on crit, we create a crit object
+                if (this.is_crit) {
+                    md.crits.push(new Crit(e.x, e.y, md.t));
+                }
                 break;
             }
         }

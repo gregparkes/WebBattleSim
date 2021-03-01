@@ -1,9 +1,9 @@
 // a (class) for handling melee attack
 
 class Melee extends Attack {
-    constructor(x, y, team, dmg, target) {
+    constructor(source, damage, target) {
         // call constructor of attack
-        super(x, y, team, dmg);
+        super(source, damage, false);
         this.target = target;
         this.tick = 0;
     }

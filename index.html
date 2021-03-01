@@ -27,12 +27,11 @@
     <script type="text/javascript" src="sim/draw.js"></script>
     <script type="text/javascript" src="sim/field.js"></script>
     <script type="text/javascript" src="sim/collide.js"></script>
-    <script type="text/javascript" src="sim/sprite.js"></script>
+    <script type="text/javascript" src="sim/base/sprite.js"></script>
+    <script type="text/javascript" src="sim/base/combative.js"></script>
     <script type="text/javascript" src="sim/units/unit.js"></script>
     <script type="text/javascript" src="sim/units/jedi.js"></script>
-    <script type="text/javascript" src="sim/units/clonetrooper.js"></script>
-    <script type="text/javascript" src="sim/units/b1battledroid.js"></script>
-    <script type="text/javascript" src="sim/units/b2battledroid.js"></script>
+    <script type="text/javascript" src="sim/units/unit_special.js"></script>
     <script type="text/javascript" src="sim/units/sharpshooter.js"></script>
     <script type="text/javascript" src="sim/units/unit_template.js"></script>
     <script type="text/javascript" src="sim/ai.js"></script>
@@ -44,6 +43,7 @@
     <script type="text/javascript" src="sim/attack/melee.js"></script>
     <script type="text/javascript" src="sim/attack/att_types.js"></script>
     <script type="text/javascript" src="sim/miscobj/turret.js"></script>
+    <script type="text/javascript" src="sim/animate/crit.js"></script>
     <script type="text/javascript" src="sim/spawn/spawner.js"></script>
     <!-- Here we have our local javascript code for the main window -->
     <script type="text/javascript" src="interactive/win_glob.js"></script>
@@ -159,7 +159,7 @@
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
                                         <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapse1">
-                                            Select a Template:
+                                            Templates:
                                             <span class="glyphicon glyphicon-arrow-down"></span></a></h4>
                                     </div>
                                     <div id="collapse1" class="panel-collapse collapse-in">
@@ -198,12 +198,19 @@
                                     </div>
                                     <div id="collapse2" class="panel-collapse collapse">
                                         <div class="panel-body">
+                                            <div>
+                                                <label for="nrep">
+                                                    <a href="#" data-toggle="tooltip" title="The maximum length of the simulation in (t) timesteps.">
+                                                        Simulation Max (t):</a>
+                                                </label>
+                                                <input type="number" class="form-control" id="sim_max" value="2000">
+                                            </div>
                                             <div class="form-group">
                                                 <div class="checkbox">
-                                                    <label><input type="checkbox" id="unit_collision">Unit-Unit Collision</label>
+                                                    <label><input type="checkbox" id="unit_collision" checked>Unit-Unit Collision</label>
                                                 </div>
                                                 <div class="checkbox">
-                                                    <label><input type="checkbox" id="hp_bar">Display HP</label>
+                                                    <label><input type="checkbox" id="hp_bar" checked>Display HP</label>
                                                 </div>
                                             </div>
                                         </div>

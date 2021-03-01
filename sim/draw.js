@@ -41,6 +41,13 @@ const draw = {
         ctx.fill();
     },
 
+    crit: function(ctx, x, y) {
+        /* Writes CRIT over the specific unit */
+        ctx.font = "10px Arial";
+        ctx.fillStyle = "rgba(255, 153, 51, 1.0)";
+        ctx.fillText("CRIT", x, y);
+    },
+
     cross: function(ctx, x, y, color, size=8) {
         // this function draws a full cross (dead) of fixed size
         ctx.save();

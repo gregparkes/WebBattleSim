@@ -19,16 +19,6 @@ const BATTLE_TEMPLATE = {
             units = g1.concat(g2);
         return battle(ctx, units, field);
     },
-    ATTACKER_DEFENDER: function(ctx, n1=20, n2=25) {
-        let [w, h] = set_dims(),
-            field = Field(w, h),
-            g1 = unit_group.make_gaussian(CloneTrooper, n1, w * .2, w * .2 + 100,
-                h * .2, w * .2 + 100, AI.stand),
-            g2 = unit_group.make_gaussian(B1Battledroid, n2, w * .8, w * .8 + 25,
-                h * .8, h * .8 + 50, AI.aggressive),
-            units = g1.concat(g2);
-        return battle(ctx, units, field);
-    },
     SNIPERS_NEST: function(ctx, n1=20, n2=25) {
         let [w, h] = set_dims(),
             field = Field(w, h),

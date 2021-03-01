@@ -117,6 +117,7 @@ const ai_next_target = {
 const AI = {
     // determines the choices a unit should be making
 
+    /* Assumes target is alive */
     _aggressive_pursue: function(u, md) {
         // attack if in range, else move towards
         if (u.isTargetInRange()) {
@@ -124,7 +125,7 @@ const AI = {
             u.attack(md);
         } else {
             // AI moves towards its opponent
-            u.move(md, true);
+            u.move(md);
         }
     },
 
@@ -143,14 +144,14 @@ const AI = {
     hit_and_run: function(u, md, next_target=ai_next_target.nearest) {
         // a hit-and-run style which relies on faster speed and longer range
         if (Math.random() >= 0.01 && u.isTargetAlive()) {
-            if ((u.mvs > u.target.mvs) && (u.range > u.target.range)) {
+            if ((u.speed > u.target.speed) && (u.range > u.target.range)) {
                 // we can use hit and run
                 if (u._dist > u.range) {
                     // if we're not in range, move closer.
-                    u.move(md, true);
+                    u.move(md);
                 } else if (u._dist <= u.target.range) {
                     // if the opponent is in range, move back.
-                    u.move(md, false);
+                    u.move(md, -1.0);
                 } else {
                     // otherwise attack
                     u.attack(md);
@@ -168,7 +169,7 @@ const AI = {
         if (u.isTargetAlive() && u.isTargetInRange()) {
             u.attack(md);
         }
-        // perform check every 5 frames or so
+        // perform check and update next closest target every 5 frames or so
         if (md.t % 5 === 0) {
             u.target = next_target(u, md)
         }

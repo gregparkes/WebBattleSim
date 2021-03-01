@@ -42,6 +42,8 @@ window.onload = function() {
         IS_HP_DISPLAYED = hp_check.checked;
     });
 
+    IS_HP_DISPLAYED = hp_check.checked;
+
     // log
     console.log(battle.units);
 
