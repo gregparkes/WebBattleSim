@@ -9,13 +9,13 @@ const UNITAITYPE = {
 
 class Unit extends Combative {
 
-    constructor(i, x, y, attack, dex, con, mvs, range,
+    constructor(i, x, y, atk, dex, con, mvs, range,
                 team, fire_rate, dflr, ai) {
         // call element
         super(i, x, y, team, con);
         // attributes
         this.hit_radius = 8;
-        this.atk = attack;
+        this.atk = atk;
         this.dex = dex;
         this.mvs = mvs;
         this.range = range;
@@ -24,8 +24,6 @@ class Unit extends Combative {
         this.ai = ai;
         // default attack type
         this.atk_type = AttackType.PROJECTILE;
-        // by default - infantry
-        this.utype = "infantry";
     
         // default unit size
         this.sizebot = 10;
@@ -34,7 +32,7 @@ class Unit extends Combative {
     
     _execute_movement(md, modifier=1., towards=true) {
         // moves this combative with bounds check
-        this.moveToTarget(md, this.mvs * modifier, towards);
+        this.translate(md, this.mvs * modifier, towards);
         // update is_attacking flag
         this.is_attacking = false;
     }
@@ -74,9 +72,9 @@ class Unit extends Combative {
     
     attack(md) {
         // make an attack role of 2d8 to add to a potential attack, {2-16}
-        let hit_roll = utils.ddroll("1d6"),
-            att_roll = utils.ddroll("2d8"),
-            def_roll = utils.ddroll("1d8");
+        let hit_roll = Dice.d1d6(),
+            att_roll = Dice.d2d8(),
+            def_roll = Dice.d1d8();
 
         // see if our damage roll overcomes the defence roll
         if (this.atk + hit_roll >= this.target.dex) {

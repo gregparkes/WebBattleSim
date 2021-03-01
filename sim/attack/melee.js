@@ -9,21 +9,22 @@ class Melee extends Attack {
     }
 
     update(md) {
-        if (this.active) {
+        if (this.alive) {
             this.tick++;
             this.x = this.target.x;
             this.y = this.target.y;
-            if (this.tick >= 10) {
-                this.active = false;
-            }
             if (this.tick === 6) {
                 this.target.dealDamageFrom(this.damage);
+
+            }
+            if (this.tick >= 10) {
+                this.alive = false;
             }
         }
     }
 
     render(ctx) {
-        if (this.active) {
+        if (this.alive) {
             ctx.save();
             ctx.translate(this.x, this.y);
             ctx.beginPath();

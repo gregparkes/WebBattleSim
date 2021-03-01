@@ -14,11 +14,10 @@ class CloneSharpshooter extends Unit {
     attack(md) {
         if (Math.random() < this.fire_rate) {
             md.projectiles.push(new Projectile(
-                this.x, this.y, this.team, this.attack, this._nddx, this._nddy,
+                this.x, this.y, this.team, this.atk, this._nddx, this._nddy,
                 this.range, 10., 2.));
         }
     }
-
     // draw a snipers crosshair on top
     render(ctx) {
         if (this.hp > 0.0) {

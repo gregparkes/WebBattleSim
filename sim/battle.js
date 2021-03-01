@@ -99,8 +99,8 @@ const battle = (ctx, objects, field) => ({
     filter_objects: function(every_t = 15) {
         // go through and filter out the non-alive objects every so often
         if (this.t % every_t === 0) {
-            this.projectiles = this.projectiles.filter(p => p.active);
-            this.melees = this.melees.filter(m => m.active);
+            this.projectiles = this.projectiles.filter(p => p.alive);
+            this.melees = this.melees.filter(m => m.alive);
         }
     },
 
@@ -129,9 +129,13 @@ const battle = (ctx, objects, field) => ({
 
         let update_f = (element) => element.update(this);
 
+        // units updated first
         this.units.forEach(update_f);
+        // then turrets
         this.turrets.forEach(update_f);
+        // then spawners
         this.spawners.forEach(update_f);
+        // finally attacks and projectiles.
         this.projectiles.forEach(update_f);
         this.melees.forEach(update_f);
 

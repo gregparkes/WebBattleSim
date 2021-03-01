@@ -9,7 +9,6 @@ class Jedi extends Unit {
             UNIT.Jedi.DEFLECT, ai);
         // override attributes
         this.atk_type = AttackType.MELEE;
-        this.utype = "force_wielder";
         this.sizebot = 14;
         this.sizelen = 21;
 

@@ -28,7 +28,7 @@ class Projectile extends Attack {
         this._switch_team();
         // if this attack damage is below 0, de-activate
         if (this.damage <= 0.1) {
-            this.active = false;
+            this.alive = false;
             return;
         }
         // update positional arguments
@@ -43,12 +43,12 @@ class Projectile extends Attack {
         // allow unit to calculate damage effects.
         u.dealDamageFrom(this.damage);
         // no longer active
-        this.active = false;
+        this.alive = false;
     }
 
     has_collided(u) {
         // {2-16}
-        let deflect_roll = utils.ddroll("2d8");
+        let deflect_roll = Dice.d2d8();
         // roll chance to deflect
         if (deflect_roll <= u.dflr) {
             // then re-direct the attack
@@ -77,24 +77,24 @@ class Projectile extends Attack {
         }
     }
 
-    move() {
+    translate() {
         this.x += this.dx * this.vel;
         this.y += this.dy * this.vel;
     }
 
     update(md) {
-        if (this.active && this._in_range()) {
+        if (this.alive && this._in_range()) {
             // move
-            this.move();
+            this.translate();
             // perform collision detection
             this.check_collision(md);
         } else {
-            this.active = false;
+            this.alive = false;
         }
     }
 
     render(ctx) {
-        if (this.active) {
+        if (this.alive) {
             ctx.beginPath();
             // @ts-ignore
             ctx.fillStyle = "rgba({0},{1},{2},0.3)".format(this.color);

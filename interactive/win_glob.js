@@ -1,6 +1,7 @@
 // global map for the battle templates
 
 const btemplate_map = {
+
     "Opposite Aggressive": BATTLE_TEMPLATE.OPPOSITE_AGGRESSIVE,
     "Aggressor Defender": BATTLE_TEMPLATE.ATTACKER_DEFENDER,
     "Snipers' Nest": BATTLE_TEMPLATE.SNIPERS_NEST,

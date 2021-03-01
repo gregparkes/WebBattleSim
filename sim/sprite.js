@@ -105,7 +105,7 @@ class Combative extends Sprite {
         }
     }
 
-    moveToTarget(md, modifier=1, towards=true) {
+    translate(md, modifier=1.0, towards=true) {
         if (towards) {
             this.x += this._nddx * modifier;
             this.y += this._nddy * modifier;
@@ -131,16 +131,6 @@ class Combative extends Sprite {
 
     isTargetAlive() {
         return (this.target && this.target.hp > 0.0);
-    }
-
-    orientTo(ctx, func, ...args) {
-        // save the context, set position and rotation
-        ctx.save();
-        ctx.translate(this.x, this.y);
-        ctx.rotate(this._angle);
-        // uses a custom drawing function which takes f(ctx, ...args)
-        func(ctx, ...args);
-        ctx.restore();
     }
 
 }
