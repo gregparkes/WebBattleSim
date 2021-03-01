@@ -5,7 +5,7 @@ class Jedi extends Unit {
         super(i, x, y, UNIT.Jedi.ATK,
             UNIT.Jedi.DEX, UNIT.Jedi.CON,
             UNIT.Jedi.MVS, UNIT.Jedi.RANGE,
-            UNIT.Jedi.TEAM, UNIT.Jedi.FIRERATE,
+            TEAM.REPUBLIC, UNIT.Jedi.FIRERATE,
             UNIT.Jedi.DEFLECT, ai);
         // override attributes
         this.atk_type = AttackType.MELEE;
@@ -14,14 +14,12 @@ class Jedi extends Unit {
 
         this.lightsaber_color = (Math.random() < 0.5) ? [106, 187, 252] : [52, 237, 68];
         this.lightsaber_angle = this._angle + 20;
-
-        this.is_attacking = false;
     }
 
     dealDamageFrom(source, dmg) {
         // super.dealDamageFrom(source, dmg);
         // we take no damage from units that we are targetting.
-        if (source !== target) {
+        if (source !== this.target) {
             super.dealDamageFrom(source, dmg);
         }
     }

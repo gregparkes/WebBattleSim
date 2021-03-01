@@ -36,8 +36,8 @@ class Sprite extends CanvObj {
         super();
         this.x = x;
         this.y = y;
-        this.team = (team === "Republic") ? TEAM.REPUBLIC : TEAM.CIS;
-        this.color = (team === "Republic") ? [255, 0, 0] : [0, 0, 255];
+        this.team = team;
+        this.color = (team === TEAM.REPUBLIC) ? [255, 0, 0] : [0, 0, 255];
     }
 
     _switch_team() {

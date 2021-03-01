@@ -22,44 +22,6 @@ const utils = {
         // returns min... max-1
         return Math.floor(min + Math.random() * (max - min + 1));
     },
-    ddroll: function(rname) {
-        // uses the D&D roll number system, e.g "1d20", for one 20-sided die, "2d8" for 8-sided 2 dice +
-        let res = rname.split("d", 2),
-            ndie = parseInt(res[0]),
-            nsides = parseInt(res[1]),
-            _sum = 0.0;
-
-        for (let i = 0; i < ndie; i++) {
-            _sum += (utils.randomInt(0, nsides) + 1);
-        }
-        return _sum;
-    },
-    fisher_yates: function(points) {
-        // shuffles an array
-        for (let i = points.length -1; i > 0; i--) {
-            let j = Math.floor(Math.random() * i),
-                k = points[i];
-
-            points[i] = points[j]
-            points[j] = k
-        }
-        return points;
-    },
-    clamp: function(v, min, max) {
-        if (v < min) {
-            return min;
-        } else if (v > max) {
-            return max;
-        } else {
-            return v;
-        }
-    },
-    norm: function(value, min, max) {
-        return (value - min) / (max - min);
-    },
-    lerp: function(norm, min, max) {
-        return (max - min) * norm + min;
-    },
     gauss1: function(start, end) {
         let r = 0,
             v = 6;
@@ -70,6 +32,17 @@ const utils = {
         return (r / v) * (end - start) + start;
 
     },
+    gauss2: function() {
+        /* A standard gaussian with 0 mean and 1 std
+        * gauss improves in accuracy as v -> inf. */
+        let r = 0,
+            v = 6;
+        for (let i = v; i > 0; i--)
+        {
+            r += Math.random();
+        }
+        return r / v;
+    },
     uniformArray: function(n, a=0, b=1) {
         // @ts-ignore
         return Array.from({length: n}, () => Math.random() * (b - a) + a);
@@ -78,14 +51,6 @@ const utils = {
         let e = [];
         for (let i = 0; i < n; i++) {
             e.push(utils.gauss1(m, sd));
-        }
-        return e;
-    },
-    repeatn: function(f, n) {
-        // repeat function call f, n times
-        let e = [];
-        for (let i = 0; i < n; i++) {
-            e.push(f());
         }
         return e;
     }

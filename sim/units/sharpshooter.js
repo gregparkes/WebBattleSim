@@ -6,7 +6,7 @@ class CloneSharpshooter extends Unit {
         super(i, x, y, UNIT.CloneSharpshooter.ATK,
             UNIT.CloneSharpshooter.DEX, UNIT.CloneSharpshooter.CON,
             UNIT.CloneSharpshooter.MVS, UNIT.CloneSharpshooter.RANGE,
-            UNIT.CloneSharpshooter.TEAM, UNIT.CloneSharpshooter.FIRERATE,
+            TEAM.REPUBLIC, UNIT.CloneSharpshooter.FIRERATE,
             UNIT.CloneSharpshooter.DEFLECT, ai);
         this.crit_modifier = 3.0;
     }
