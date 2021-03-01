@@ -40,6 +40,8 @@ const battle = (ctx, objects, field) => ({
     turrets: objects.filter(u => u instanceof Turret),
     // crit texts
     crits: [],
+    // obstacles
+    obstacles: objects.filter(r => r instanceof RectObstacle),
 
     // START FUNCTION to START the BATTLE
     start: function() {
@@ -134,6 +136,7 @@ const battle = (ctx, objects, field) => ({
 
         let update_f = (element) => element.update(this);
 
+        this.obstacles.forEach(update_f);
         // units updated first
         this.units.forEach(update_f);
         // then turrets
@@ -159,6 +162,8 @@ const battle = (ctx, objects, field) => ({
         // this.ctx.drawImage(this.bg_image, 0, 0, this.field.width, this.field.height);
         let render_f = (element, i) => element.render(this.ctx);
 
+        // render obstacles first
+        this.obstacles.forEach(render_f);
         // render in this order
         this.units.forEach(render_f);
         this.turrets.forEach(render_f);
