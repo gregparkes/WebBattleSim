@@ -75,7 +75,8 @@ class Combative extends Sprite {
         return this._angle;
     }
 
-    dealDamageFrom(dmg) {
+    dealDamageFrom(source, dmg) {
+        // default setting; apply damage directly to the HP.
         this.hp -= dmg;
     }
 

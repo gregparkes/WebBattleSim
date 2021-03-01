@@ -52,6 +52,8 @@ class Unit extends Combative {
             this.updateToTarget(e, false, true);
             // collision has occurred
             this.translate(md, this.speed * -0.3 * speed_modifier);
+            // update back to current target
+            this.updateToTarget();
         } else {
             // collision has not occured
             this.translate(md, this.speed * speed_modifier);

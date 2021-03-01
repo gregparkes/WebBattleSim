@@ -15,7 +15,6 @@ class Melee extends Attack {
             this.y = this.target.y;
             if (this.tick === 6) {
                 this.target.dealDamageFrom(this.damage);
-
             }
             if (this.tick >= 10) {
                 this.alive = false;

@@ -40,7 +40,7 @@ class Projectile extends Attack {
     }
 
     dealDamage(u) {
-        // allow unit to calculate damage effects.
+        // allow unit to perform damage effects.
         u.dealDamageFrom(this.damage);
         // no longer active
         this.alive = false;

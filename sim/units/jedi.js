@@ -2,7 +2,7 @@
 
 class Jedi extends Unit {
     constructor(i, x, y, ai) {
-        super(i, x, y, UNIT.Jedi.ATTACK,
+        super(i, x, y, UNIT.Jedi.ATK,
             UNIT.Jedi.DEX, UNIT.Jedi.CON,
             UNIT.Jedi.MVS, UNIT.Jedi.RANGE,
             UNIT.Jedi.TEAM, UNIT.Jedi.FIRERATE,
@@ -13,7 +13,26 @@ class Jedi extends Unit {
         this.sizelen = 21;
 
         this.lightsaber_color = (Math.random() < 0.5) ? [106, 187, 252] : [52, 237, 68];
+        this.lightsaber_angle = this._angle + 20;
 
+        this.is_attacking = false;
+    }
+
+    dealDamageFrom(source, dmg) {
+        // super.dealDamageFrom(source, dmg);
+        // we take no damage from units that we are targetting.
+        if (source !== target) {
+            super.dealDamageFrom(source, dmg);
+        }
+    }
+
+    update(md) {
+        super.update(md);
+        if (this.isTargetInRange())
+        {
+            // update lightsaber angle
+            this.lightsaber_angle += 0.25;
+        }
     }
 
     render(ctx) {
@@ -45,7 +64,7 @@ class Jedi extends Unit {
             // draw lightsaber
             ctx.save();
             ctx.translate(this.x, this.y);
-            ctx.rotate(this._angle+20);
+            ctx.rotate(this._angle + this.lightsaber_angle);
             // draw a long rectangle stick to represent lightsaber
             ctx.fillStyle = "rgba({0},{1},{2},0.8)".format(this.lightsaber_color);
             ctx.fillRect(0, -3, 15, 2.5);

@@ -1,6 +1,6 @@
 class B1Battledroid extends Unit {
     constructor(i, x, y, ai) {
-        super(i, x, y, UNIT.B1Battledroid.ATTACK,
+        super(i, x, y, UNIT.B1Battledroid.ATK,
             UNIT.B1Battledroid.DEX, UNIT.B1Battledroid.CON,
             UNIT.B1Battledroid.MVS, UNIT.B1Battledroid.RANGE,
             UNIT.B1Battledroid.TEAM,UNIT.B1Battledroid.FIRERATE,
@@ -11,7 +11,7 @@ class B1Battledroid extends Unit {
 class B2Battledroid extends Unit {
 
     constructor(i, x, y, ai) {
-        super(i, x, y, UNIT.B2Battledroid.ATTACK,
+        super(i, x, y, UNIT.B2Battledroid.ATK,
             UNIT.B2Battledroid.DEX, UNIT.B2Battledroid.CON,
             UNIT.B2Battledroid.MVS, UNIT.B2Battledroid.RANGE,
             UNIT.B2Battledroid.TEAM, UNIT.B2Battledroid.FIRERATE,
@@ -24,7 +24,7 @@ class B2Battledroid extends Unit {
 
 class CloneTrooper extends Unit {
     constructor(i, x, y, ai) {
-        super(i, x, y, UNIT.CloneTrooper.ATTACK,
+        super(i, x, y, UNIT.CloneTrooper.ATK,
             UNIT.CloneTrooper.DEX, UNIT.CloneTrooper.CON,
             UNIT.CloneTrooper.MVS, UNIT.CloneTrooper.RANGE,
             UNIT.CloneTrooper.TEAM, UNIT.CloneTrooper.FIRERATE,
