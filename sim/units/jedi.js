@@ -1,8 +1,8 @@
 // constructor
 
 class Jedi extends Unit {
-    constructor(i, x, y, ai) {
-        super(i, x, y, UNIT.Jedi.ATK,
+    constructor(x, y, ai) {
+        super(x, y, UNIT.Jedi.ATK,
             UNIT.Jedi.DEX, UNIT.Jedi.CON,
             UNIT.Jedi.MVS, UNIT.Jedi.RANGE,
             TEAM.REPUBLIC, UNIT.Jedi.FIRERATE,

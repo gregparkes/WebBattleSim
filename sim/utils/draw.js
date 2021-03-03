@@ -22,6 +22,15 @@ const draw = {
         ctx.restore();
     },
 
+    line_single: function(ctx, x1, y1, x2, y2, color, lw=1) {
+        ctx.strokeStyle = color;
+        ctx.lineWidth = lw;
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2,y2);
+        ctx.stroke();
+    },
+
     healthbar: function(ctx, x, y, hp_ratio, size=12) {
         // get the HP per pixel to draw the bar the correct length
         let hppx = Math.floor(size * hp_ratio);

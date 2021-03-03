@@ -1,7 +1,15 @@
 const utils = {
     distanceXY: function(x1, y1, x2, y2) {
+        /* Computes 2D euclidean distance using points x1,x2 and y1,y2.
+         */
         let dx = x2 - x1,
             dy = y2 - y1;
+        return Math.sqrt(dx*dx + dy*dy);
+    },
+    distance2XY: function(dx, dy) {
+        /* Using the pre-calculated derivatives dx = x2-x1, dy = y2-y1
+        Calculates the euclidean distance between them.
+         */
         return Math.sqrt(dx*dx + dy*dy);
     },
     rotate: function(cx, cy, x, y, angle) {

@@ -6,7 +6,8 @@ const battle = (ctx, objects, field) => ({
     // drawing context
     ctx: ctx,
     // game logic mechanics from simulation params
-    UU_COLLISION: false,
+    UNIT_COLLISION: false,
+    OBSTACLE_COLLISION: false,
     // frames
     t: 0,
     // time
@@ -23,7 +24,7 @@ const battle = (ctx, objects, field) => ({
     objects: objects,
     // unit arrays
     units: objects.filter(u => u instanceof Unit),
-    // alive roster
+    // alive unit roster
     _alive: [],
     // alive unit per team caches
     _c_alive: [],
@@ -47,16 +48,13 @@ const battle = (ctx, objects, field) => ({
     start: function() {
         if (!this.running) {
             // check whether mechanics are set
-            this.UU_COLLISION = document.getElementById("unit_collision").checked;
+            this.UNIT_COLLISION = document.getElementById("unit_collision").checked;
+            this.OBSTACLE_COLLISION = document.getElementById("obstacle_collision").checked;
             // set the t_max
             this.T_MAX = document.getElementById("sim_max").value;
             // start running
             this.running = true;
             this.t = 0;
-            // re-assign ids to all units
-            for (let i = 0; i < this.units.length; i++) {
-                this.units[i].id = i;
-            }
             // set caches
             this.setCaches();
             // randomly assign start targets
@@ -82,24 +80,11 @@ const battle = (ctx, objects, field) => ({
     },
 
     get_enemies: function(team) {
-        // get the array of the enemy of the team passed
-        if (team === TEAM.REPUBLIC) {
-            return this._c_alive;
-        } else if (team === TEAM.CIS) {
-            return this._r_alive;
-        } else {
-            alert("team '" + team + "' not recognized.");
-        }
+        return (team === TEAM.REPUBLIC) ? this._c_alive : this._r_alive;
     },
 
     get_allies: function(team) {
-        if (team === TEAM.REPUBLIC) {
-            return this._r_alive;
-        } else if (team === TEAM.CIS) {
-            return this._c_alive;
-        } else {
-            alert("team '" + team + "' not recognized.");
-        }
+        return (team === TEAM.REPUBLIC) ? this._r_alive : this._c_alive;
     },
 
     filter_objects: function(every_t = 100) {
@@ -159,7 +144,6 @@ const battle = (ctx, objects, field) => ({
     render: function() {
         // clears the screen
         draw.cls(this.ctx, this.field.width, this.field.height);
-        // this.ctx.drawImage(this.bg_image, 0, 0, this.field.width, this.field.height);
         let render_f = (element, i) => element.render(this.ctx);
 
         // render obstacles first
@@ -172,15 +156,33 @@ const battle = (ctx, objects, field) => ({
         // update crits
         this.crits.forEach(render_f);
 
+        // display grid if set
+        if (IS_GRID_DISPLAYED) {
+            this._render_grid(ctx);
+        }
+
         // add text to update timestep, number of units
         this.ctx.font = "30px Arial";
         this.ctx.strokeText("BattleSimulator", this.field.width - 220, 30);
 
         // add counter at bottom right
         let stats = ("Republic: " + this._r_alive.length + " CIS: "
-            + this._c_alive.length + " t: " + this.t + " fps: " + Math.floor(1. / this.freezedelta));
+            + this._c_alive.length + " t: " + this.t + " fps: " + Math.floor(1. / this.freezedelta)
+            + " size(" + Math.floor(this.field.width) + "," + Math.floor(this.field.height) + ")");
         this.ctx.font = "12px Arial";
-        this.ctx.strokeText(stats, this.field.width - 200, this.field.height - 20);
+        this.ctx.strokeText(stats, this.field.width - 275, this.field.height - 20);
     },
+
+    _render_grid: function(ctx, nx = 10, ny = 10) {
+        // attempts to render a grid of squares over the domain.
+        let dx = this.field.width / nx,
+            dy = this.field.height / ny;
+        for (let gx = 1; gx < nx; gx++) {
+            draw.line_single(ctx, dx*gx, 0, dx*gx, this.field.height);
+        }
+        for (let gy = 1; gy < ny; gy++) {
+            draw.line_single(ctx, 0, dy*gy, this.field.width, dy*gy);
+        }
+    }
 
 })

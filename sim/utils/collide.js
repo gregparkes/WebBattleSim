@@ -1,10 +1,8 @@
+// create an enum that describes what type of collider this is.
+
+
 const collide = {
     // different collision methods
-    _distanceXY: function(p1x, p1y, p2x, p2y) {
-        let dx = p2x - p1x,
-            dy = p2y - p1y;
-        return Math.sqrt(dx*dx + dy*dy);
-    },
     _in_range: function(v, min, max) {
         return v > Math.min(min,max) && v <= Math.max(min, max);
     },
@@ -118,7 +116,42 @@ const collide = {
     },
 
     circle_circle: function(p1x, p1y, r1, p2x, p2y, r2) {
-        return collide._distanceXY(p1x, p1y, p2x, p2y) <= r1 + r2;
+        return utils.distanceXY(p1x, p1y, p2x, p2y) <= r1 + r2;
+    },
+
+    circle_rect: function(cx, cy, c_radius, rx, ry, rw, rh) {
+        /* Calculates the collision between a circle and rectangle.
+
+        cx : float
+            circle x coord
+        cy : float
+            circle y coord
+        c_radius : float
+        rx : float
+            rectangle x
+        ry : float
+            rectangle y
+        rw : float
+            rectangle width
+        rh : float
+            rectangle height
+         */
+        let dx = Math.abs(cx - rx - rw / 2),
+            dy = Math.abs(cy - ry - rh / 2);
+
+        if (dx > (rw / 2 + c_radius))
+            return false;
+        if (dy > (rh / 2 + c_radius))
+            return false;
+        if (dx <= (rw / 2))
+            return true;
+        if (dy <= (rh / 2))
+            return true;
+
+        // use pythagoras theorem to deal with rect corners
+        let nx = dx - rw / 2,
+            ny = dy - rh / 2;
+        return (nx*nx + ny*ny <= (c_radius*c_radius));
     },
 
     rect_rect: function(rp1, rs1, rp2, rs2) {
@@ -127,7 +160,7 @@ const collide = {
             collide._range_intersect(rp1[1], rp1[1] + rs1[1], rp2[1], rp2[0]+rs2[1]);
     },
 
-    circle_rect: function(c_point, c_radius, r_point, r_size) {
+    circle_rect2: function(c_point, c_radius, r_point, r_size) {
         let dx = Math.abs(c_point[0] - r_point[0] - r_size[0] / 2),
             dy = Math.abs(c_point[1] - r_point[1] - r_size[1] / 2);
         // in this case half-circle is too far away

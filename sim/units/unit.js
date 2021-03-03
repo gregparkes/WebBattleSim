@@ -1,9 +1,3 @@
-// types of AI for units
-
-const UNITAITYPE = {
-    AGRESSIVE: 0, HIT_AND_RUN: 1, STAND: 2, DEFENSIVE: 3
-}
-
 // A Unit is an object that can move, attack, defend and in general has a large, diverse set of
 // capabilities.
 
@@ -15,10 +9,10 @@ of AI capabilities.
 
 class Unit extends Combative {
 
-    constructor(i, x, y, atk, dex, con, mvs, range,
+    constructor(x, y, atk, dex, con, mvs, range,
                 team, fire_rate, dflr, ai) {
         // call element
-        super(i, x, y, team, con);
+        super(x, y, team, con);
         // attributes
         this.hit_radius = 8;
         this.atk = atk;
@@ -41,13 +35,14 @@ class Unit extends Combative {
     
     _unit_collision_check(md, speed_modifier) {
         // iterate over every alive unit and check (assuming not us) whether there is a single circle collision
-        let collision_objs = md._alive.filter(e =>
-            ((this.id !== e.id) && collide.circle_circle(this.x, this.y, this.hit_radius * .7,
-                e.x, e.y, e.hit_radius*.7))
-        )
-        if (collision_objs.length > 0) {
+        let collision_units = md._alive.filter(e =>
+            ((e !== this) && collide.circle_circle(this.x, this.y, this.hit_radius * .7,
+                e.x, e.y, e.hit_radius * .7))
+        );
+
+        if (collision_units.length > 0) {
             // move away from the first collided object
-            let e = collision_objs[0];
+            let e = collision_units[0];
             // update dx, dy, _dist, nddx and nddy to target
             this.updateToTarget(e, false, true);
             // collision has occurred
@@ -59,13 +54,27 @@ class Unit extends Combative {
             this.translate(md, this.speed * speed_modifier);
         }
     }
-    
+
+    _obstacle_collision_check(md, speed_modifier) {
+        // iterate over collision objects and see if we hit any of them
+        let obsts_hit = md.obstacles.filter(o =>
+            collide.circle_rect(this.x, this.y, this.hit_radius, o.x, o.y, o.w, o.h));
+
+        if (obsts_hit.length === 0) {
+            this.translate(md, this.speed * speed_modifier);
+        } else {
+            // we hit something, don't move.
+        }
+    }
     // public functions
     
     move(md, speed_modifier=1.0) {
-        if (md.UU_COLLISION) {
+        if (md.UNIT_COLLISION) {
             this._unit_collision_check(md, speed_modifier);
-        } else {
+        } else if(md.OBSTACLE_COLLISION) {
+            this._obstacle_collision_check(md, speed_modifier);
+        }
+        else {
             this.translate(md, this.speed * speed_modifier);
         }
     }

@@ -46,7 +46,7 @@ class Projectile extends Attack {
         this.alive = false;
     }
 
-    has_collided(u) {
+    unit_collided(u) {
         // {2-16}
         // roll chance to deflect
         if (Dice.d2d8() <= u.dflr) {
@@ -64,24 +64,23 @@ class Projectile extends Attack {
 
     check_collision(md) {
         // get enemy unit list - only alive enemy units
-        let enemy = md.get_enemies(this.team),
-            L_enemy = enemy.length;
-        // iterate over the enemies and check whether our attack has collided with any of them
-        for (let i = 0; i < L_enemy; i++) {
-            // check for collision
-            let e = enemy[i],
-                is_collided = collide.circle_circle(
-                    this.x, this.y, this.hit_radius, e.x, e.y, e.hit_radius);
-            // if we have collided with something, perform the collision
-            if (is_collided) {
-                // perform some calculation based on the unit.
-                this.has_collided(e);
-                // on crit, we create a crit object
-                if (this.is_crit) {
-                    md.crits.push(new Crit(e.x, e.y, md.t));
-                }
-                break;
+
+        let units_hit = md.get_enemies(this.team).filter(e =>
+            collide.circle_circle(this.x, this.y, this.hit_radius, e.x, e.y, e.hit_radius)),
+            obstacles_hit = md.obstacles.filter(o =>
+            collide.circle_rect(this.x, this.y, this.hit_radius, o.x, o.y, o.w, o.h));
+
+        if (units_hit.length > 0) {
+            let u = units_hit[0];
+            this.unit_collided(u);
+            if (this.is_crit) {
+                md.crits.push(new Crit(u.x, u.y, md.t))
             }
+        }
+        // otherwise lets look at obstacles
+        else if (obstacles_hit.length > 0) {
+            // the projectile stops.
+            this.alive = false;
         }
     }
 

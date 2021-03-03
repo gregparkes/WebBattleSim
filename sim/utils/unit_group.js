@@ -7,9 +7,7 @@ const unit_group = {
             s = [];
 
         for (let i = 0; i < n; i++) {
-            //let u = unit(x[i], y[i]);
-            let u = new unit(i, x[i], y[i], ai_type);
-            // u.ai = ai_type;
+            let u = new unit(x[i], y[i], ai_type);
             s.push(u);
         }
         return s;
@@ -22,9 +20,7 @@ const unit_group = {
             s = [];
 
         for (let i = 0; i < n; i++) {
-            // let u = unit(x[i], y[i]);
-            let u = new unit(i, x[i], y[i], ai_type);
-            // u.ai = ai_type;
+            let u = new unit(x[i], y[i], ai_type);
             s.push(u);
         }
         return s;

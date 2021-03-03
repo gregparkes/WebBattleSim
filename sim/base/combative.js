@@ -10,10 +10,9 @@ directions of which way to go.
 
 class Combative extends Sprite {
 
-    constructor(i, x, y, team, con) {
+    constructor(x, y, team, con) {
         super(x, y, team);
         // set ID and hit points
-        this.id = i;
         // constitution converted directly to HP
         this.hp = this.MAX_HP = 20 + (con * 7);
         // target set to null
@@ -34,6 +33,9 @@ class Combative extends Sprite {
                    update_angle = true,
                    add_perturbation = false) {
         /* Updates the derivatives and direction of the unit with. respect. to. the target.
+
+        Assumes that 'other' has position 'x' and 'y' properties.
+
             other : Unit or Combative
             update_angle : bool
                 Whether to update the angle the unit is facing (or not).
@@ -50,9 +52,11 @@ class Combative extends Sprite {
                 this.dx = other.x - this.x;
                 this.dy = other.y - this.y;
             }
-            this._dist = Math.sqrt(this.dx * this.dx + this.dy * this.dy);
+            this._dist = utils.distance2XY(this.dx, this.dy);
+            // calculate normalized directional derivatives
             this._nddx = this.dx / this._dist;
             this._nddy = this.dy / this._dist;
+            // update the directional angle (to plot arrow).
             if (update_angle) {
                 this._angle = Math.atan2(this.dy, this.dx);
             }

@@ -1,5 +1,6 @@
 // whether HP are shown on units.
-let IS_HP_DISPLAYED = false;
+let IS_HP_DISPLAYED = true;
+let IS_GRID_DISPLAYED = false;
 
 // cached inside the loading function to make it cleaner.
 window.onload = function() {
@@ -9,6 +10,7 @@ window.onload = function() {
         loop_but = document.getElementById("loop"),
         update_but = document.getElementById("update_sim"),
         hp_check = document.getElementById("hp_bar"),
+        grid_check = document.getElementById("disp_grid"),
         sim_templ = document.getElementById("sel1"),
         // button variables
         looping = false,
@@ -41,8 +43,9 @@ window.onload = function() {
     hp_check.addEventListener("click", function(e) {
         IS_HP_DISPLAYED = hp_check.checked;
     });
-
-    IS_HP_DISPLAYED = hp_check.checked;
+    grid_check.addEventListener("click", function(e) {
+        IS_GRID_DISPLAYED = grid_check.checked;
+    });
 
     // log
     console.log(battle.units);

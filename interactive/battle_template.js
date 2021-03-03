@@ -90,9 +90,9 @@ const BATTLE_TEMPLATE = {
     OBSTACLE_NAVIGATION: function(ctx, n1=10, n2=5) {
         let [w, h] = set_dims(),
             field = Field(w, h),
-            clones = unit_group.make_gaussian(CloneTrooper, 15, w * .4, w * .4 + 50,
+            clones = unit_group.make_gaussian(CloneTrooper, 2, w * .4, w * .4 + 50,
                 h * .4, h * .4 + 50, AI.aggressive),
-            droids = unit_group.make_gaussian(B1Battledroid, 15, w * .8, w * .8 + 50,
+            droids = unit_group.make_gaussian(B1Battledroid, 5, w * .8, w * .8 + 50,
                 h * .7, w * .7 + 50, AI.aggressive),
             objs = clones.concat(droids, [new RectObstacle(w/2, 100, 50, h / 2)]);
         return battle(ctx, objs, field);
