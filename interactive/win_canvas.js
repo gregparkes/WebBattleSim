@@ -12,6 +12,7 @@ window.onload = function() {
         hp_check = document.getElementById("hp_bar"),
         grid_check = document.getElementById("disp_grid"),
         sim_templ = document.getElementById("sel1"),
+        terrain_sel = document.getElementById("terrain1"),
         // button variables
         looping = false,
         paused = false,
@@ -27,8 +28,10 @@ window.onload = function() {
         // size of armies
         n1 = nrep_field.value,
         n2 = ncis_field.value,
+        // terrain default
+        terra_def = terrain_map[terrain_sel.options[terrain_sel.selectedIndex].value],
         use_template = BATTLE_TEMPLATE.OPPOSITE_AGGRESSIVE,
-        battle = use_template(canvas, n1, n2);
+        battle = use_template(canvas, terra_def);
 
     // load information into HTML selections for simulation templates
     load_templates();
@@ -50,7 +53,7 @@ window.onload = function() {
     });
 
     // log
-    console.log(battle.units);
+    console.log(battle);
 
     // first draw
     battle.render();
@@ -67,8 +70,9 @@ window.onload = function() {
     function reset_sim(e) {
         // only reset if we haven't ran before, or still fighting, or time exceeded.
         if (!battle.running) {
+            terra_def = terrain_map[terrain_sel.options[terrain_sel.selectedIndex].value]
             // initialise battle
-            battle = use_template(canvas, n1, n2);
+            battle = use_template(canvas, terra_def);
             battle.start();
             pause_but.style.backgroundColor = start_but.style.backgroundColor;
             // call the animate loop now

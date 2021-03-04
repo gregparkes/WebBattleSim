@@ -1,4 +1,4 @@
-const battle = (canvas, objects) => ({
+const battle = (canvas, objects, terrain) => ({
     /*
     our Battle object contains everything in the instance needed
     to update our game logic for a single Battle instance.
@@ -68,7 +68,7 @@ const battle = (canvas, objects) => ({
             this.t = 0;
 
             // create tile map.
-            this.map.create(this.ctx);
+            this.map.create_simple1(this.ctx, terrain);
 
             // set caches
             this.setCaches();

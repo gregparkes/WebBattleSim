@@ -9,3 +9,12 @@ const btemplate_map = {
     "Overwhelming Odds": BATTLE_TEMPLATE.OVERWHELMING_ODDS,
     "Obstacle Navigation": BATTLE_TEMPLATE.OBSTACLE_NAVIGATION
 };
+
+// global map for terrains
+
+const terrain_map = {
+    "none": null,
+    "grassland": TILESTACK.Grassland,
+    "desert": TILESTACK.Desert,
+    "tundra": TILESTACK.Tundra
+};
