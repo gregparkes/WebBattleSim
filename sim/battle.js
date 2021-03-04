@@ -1,10 +1,18 @@
-const battle = (ctx, objects, field) => ({
+const battle = (canvas, objects) => ({
     /*
     our Battle object contains everything in the instance needed
     to update our game logic for a single Battle instance.
+
+    Given the canvas object to work with, a context is made.
+
+    Arguments:
+        canvas : a canvas object
+        objects : list of [CanvObj] objects
      */
+    // information about the battlefield, including w and h
+    field: {width: canvas.width, height: canvas.height},
     // drawing context
-    ctx: ctx,
+    ctx: canvas.getContext("2d"),
     // game logic mechanics from simulation params
     UNIT_COLLISION: false,
     OBSTACLE_COLLISION: false,
@@ -24,7 +32,7 @@ const battle = (ctx, objects, field) => ({
     _xtiles: 5,
     _ytiles: 5,
     // define a map object
-    map: TileLevel(5, 5, field),
+    map: TileLevel(canvas.width, canvas.height),
     // object array for all objects
     objects: objects,
     // unit arrays
@@ -34,8 +42,6 @@ const battle = (ctx, objects, field) => ({
     // alive unit per team caches
     _c_alive: [],
     _r_alive: [],
-    // information about the battlefield, including w and h
-    field: field,
     // projectiles
     projectiles: [],
     // melee attacks
@@ -62,7 +68,7 @@ const battle = (ctx, objects, field) => ({
             this.t = 0;
 
             // create tile map.
-            this.map.create();
+            this.map.create(this.ctx);
 
             // set caches
             this.setCaches();
@@ -158,7 +164,7 @@ const battle = (ctx, objects, field) => ({
 
         let render_f = (element, i) => element.render(this.ctx);
         // render tilemap first
-        this.map.render(ctx);
+        this.map.render(this.ctx);
 
         // render obstacles first
         this.obstacles.forEach(render_f);
@@ -172,7 +178,7 @@ const battle = (ctx, objects, field) => ({
 
         // display grid if set
         if (IS_GRID_DISPLAYED) {
-            this._render_grid(ctx, this._xtiles, this._ytiles);
+            this._render_grid(this.ctx, this._xtiles, this._ytiles);
         }
 
         // add text to update timestep, number of units
@@ -182,7 +188,7 @@ const battle = (ctx, objects, field) => ({
         // add counter at bottom right
         let stats = ("Republic: " + this._r_alive.length + " CIS: "
             + this._c_alive.length + " t: " + this.t + " fps: " + Math.floor(1. / this.freezedelta)
-            + " size(" + Math.floor(this.field.width) + "," + Math.floor(this.field.height) + ")");
+            + " size(" + this.field.width + "," + this.field.height + ")");
         this.ctx.font = "12px Arial";
         this.ctx.strokeText(stats, this.field.width - 275, this.field.height - 20);
     },

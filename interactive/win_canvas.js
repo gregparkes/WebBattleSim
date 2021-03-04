@@ -17,16 +17,18 @@ window.onload = function() {
         paused = false,
         // set the canvas size
         pos_info = canvas.getBoundingClientRect(),
-        width = canvas.width = pos_info.width,
-        height = canvas.height = pos_info.height,
+        width = canvas.width = Math.floor(pos_info.width),
+        height = canvas.height = Math.floor(pos_info.height),
+        // get context.
         ctx = canvas.getContext("2d"),
+        // holding values for nrep, ncis
         nrep_field = document.getElementById("nrep"),
         ncis_field = document.getElementById("ncis"),
         // size of armies
         n1 = nrep_field.value,
         n2 = ncis_field.value,
         use_template = BATTLE_TEMPLATE.OPPOSITE_AGGRESSIVE,
-        battle = use_template(ctx, n1, n2);
+        battle = use_template(canvas, n1, n2);
 
     // load information into HTML selections for simulation templates
     load_templates();
@@ -66,7 +68,7 @@ window.onload = function() {
         // only reset if we haven't ran before, or still fighting, or time exceeded.
         if (!battle.running) {
             // initialise battle
-            battle = use_template(ctx, n1, n2);
+            battle = use_template(canvas, n1, n2);
             battle.start();
             pause_but.style.backgroundColor = start_but.style.backgroundColor;
             // call the animate loop now
