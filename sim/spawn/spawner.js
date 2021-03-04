@@ -77,7 +77,7 @@ class WallSpawner extends Spawner {
             x = utils.uniform(10, md.field.width - 10);
             y = md.field.height - 10;
         }
-        md.units.push(new this.unit(i, x, y, AI.aggressive));
+        md.units.push(new this.unit(x, y, AI.aggressive));
     }
 
 }

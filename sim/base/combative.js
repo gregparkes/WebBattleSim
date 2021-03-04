@@ -17,7 +17,7 @@ class Combative extends Sprite {
         this.hp = this.MAX_HP = 20 + (con * 7);
         // target set to null
         this.target = null;
-        // a bunch of hidden parameters for direcitonal derivatives
+        // a bunch of hidden parameters for directional derivatives
         this.dx = 0.0;
         this.dy = 0.0;
         this._nddx = 0.0;

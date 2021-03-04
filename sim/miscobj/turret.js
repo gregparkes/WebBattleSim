@@ -2,8 +2,8 @@
 
 class Turret extends Combative {
 
-    constructor(i, x, y, hp, damage, range, team, fr) {
-        super(i, x, y, team);
+    constructor(x, y, hp, damage, range, team, fr) {
+        super(x, y, team);
         // attributes
         this.hp = this.MAX_HP = hp;
         this.range = range;

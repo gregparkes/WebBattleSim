@@ -10,15 +10,15 @@ window.onload = function() {
 
     function drawLiveUnit(uname, cw, ch) {
         if (uname === "CloneTrooper") {
-            return new CloneTrooper(0, cw / 2, ch / 2, null);
+            return new CloneTrooper(cw / 2, ch / 2, null);
         } else if (uname === "B1Battledroid") {
-            return new B1Battledroid(0, cw / 2, ch / 2, null);
+            return new B1Battledroid(cw / 2, ch / 2, null);
         } else if (uname === "B2Battledroid") {
-            return new B2Battledroid(0, cw / 2, ch / 2, null);
+            return new B2Battledroid(cw / 2, ch / 2, null);
         } else if (uname === "CloneSharpshooter") {
-            return new CloneSharpshooter(0, cw / 2, ch / 2, null);
+            return new CloneSharpshooter(cw / 2, ch / 2, null);
         } else if (uname === "Jedi") {
-            return new Jedi(0, cw / 2, ch / 2, null);
+            return new Jedi(cw / 2, ch / 2, null);
         }
     }
 

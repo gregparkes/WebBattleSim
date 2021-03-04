@@ -20,6 +20,11 @@ const battle = (ctx, objects, field) => ({
     // define a minimum and maximum frame run
     T_MIN: 100,
     T_MAX: 2000,
+    // define the number of xtiles and ytiles
+    _xtiles: 5,
+    _ytiles: 5,
+    // define a map object
+    map: TileLevel(5, 5, field),
     // object array for all objects
     objects: objects,
     // unit arrays
@@ -55,6 +60,10 @@ const battle = (ctx, objects, field) => ({
             // start running
             this.running = true;
             this.t = 0;
+
+            // create tile map.
+            this.map.create();
+
             // set caches
             this.setCaches();
             // randomly assign start targets
@@ -65,6 +74,8 @@ const battle = (ctx, objects, field) => ({
                     enemy = this.get_enemies(t.team);
                 t.target = enemy[utils.randomInt(0, enemy.length-1)];
             }
+            console.log(this.map);
+
             // render once before update loop
             this.render();
         }
@@ -144,7 +155,10 @@ const battle = (ctx, objects, field) => ({
     render: function() {
         // clears the screen
         draw.cls(this.ctx, this.field.width, this.field.height);
+
         let render_f = (element, i) => element.render(this.ctx);
+        // render tilemap first
+        this.map.render(ctx);
 
         // render obstacles first
         this.obstacles.forEach(render_f);
@@ -158,7 +172,7 @@ const battle = (ctx, objects, field) => ({
 
         // display grid if set
         if (IS_GRID_DISPLAYED) {
-            this._render_grid(ctx);
+            this._render_grid(ctx, this._xtiles, this._ytiles);
         }
 
         // add text to update timestep, number of units

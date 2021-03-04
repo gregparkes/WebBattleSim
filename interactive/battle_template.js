@@ -66,11 +66,11 @@ const BATTLE_TEMPLATE = {
                 h * .5, h * .5 + 50, AI.aggressive),
             g2 = unit_group.make_uniform(CloneTrooper, 15, 30, 150,
                 20, 150, AI.hit_and_run),
-            t1 = new Turret(0, 30, 30, 500, 5., 100., TEAM.REPUBLIC, 0.06),
-            t2 = new Turret(1, 70, 30, 500, 5., 100., TEAM.REPUBLIC, 0.06),
-            t3 = new Turret(2, 30, 70, 500, 5., 100., TEAM.REPUBLIC, 0.06),
-            t4 = new Turret(3, 70, 70, 500, 5., 100., TEAM.REPUBLIC, 0.06),
-            t5 = new Turret(3, w * .4, h * .4, 500, 5., 100., TEAM.CIS, 0.06),
+            t1 = new Turret(30, 30, 500, 5., 100., TEAM.REPUBLIC, 0.06),
+            t2 = new Turret(70, 30, 500, 5., 100., TEAM.REPUBLIC, 0.06),
+            t3 = new Turret(30, 70, 500, 5., 100., TEAM.REPUBLIC, 0.06),
+            t4 = new Turret(70, 70, 500, 5., 100., TEAM.REPUBLIC, 0.06),
+            t5 = new Turret(w * .4, h * .4, 500, 5., 100., TEAM.CIS, 0.06),
             objs = g1.concat(g2, t1, t2, t3, t4, t5);
         return battle(ctx, objs, field);
     },

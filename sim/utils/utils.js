@@ -61,6 +61,30 @@ const utils = {
             e.push(utils.gauss1(m, sd));
         }
         return e;
+    },
+    fade: function(t) {
+        return t * t * t * (t * (t * 6 - 15) + 10);
+    },
+
+    perlin_scale: function(n) {
+        return (1 + n) / 2;
+    },
+
+    lerp: function(t, a, b) {
+        return a + t * (b - a);
+    },
+
+    grad: function(hash, x, y, z) {
+        let h = hash & 15,
+            u = h < 8 ? x : y,
+            v = h < 4 ? y : h===12||h===14 ? x : z;
+        return ((h&1) === 0 ? u : -u) + ((h&2) === 0 ? v : -v);
+    },
+
+    perlin: function(x, y, width, height, scale) {
+        let dx = x / width,
+            dy = y / height;
+        return PerlinNoise(scale*dx, scale*dy, .8);
     }
 };
 
