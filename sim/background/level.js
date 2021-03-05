@@ -117,8 +117,8 @@ class TilePerlinLevel extends PerlinLevel {
         super(ctx, width, height);
         this.size = tile_size;
         // set number of x tiles and y tiles
-        this.xtiles = Math.floor(width / tile_size);
-        this.ytiles = Math.floor(height / tile_size);
+        this.xtiles = Math.floor(width / tile_size) + 1;
+        this.ytiles = Math.floor(height / tile_size) + 1;
     }
 
     create(perlin, terrain) {
@@ -129,16 +129,70 @@ class TilePerlinLevel extends PerlinLevel {
         * */
         this.make_image_array(this.xtiles, this.ytiles, perlin);
 
-        /* fill imagedata with our tile information */
-        for (let yt = 0; yt < this.ytiles; yt ++) {
-            for (let xt = 0; xt < this.xtiles; xt ++) {
-                // fetch the colour for this tile.
+        // draw tiles from xtiles - 1, ytiles - 1
+        this.draw_tile_array(this.xtiles - 1, this.ytiles - 1, this.size, this.size, terrain);
+
+        /* distance remaining to fill in for a tile */
+        let x_dist = this.w - ((this.xtiles - 1) * this.size),
+            y_dist = this.h - ((this.ytiles - 1) * this.size);
+
+        // draw along the bottom.
+        for (let xt = 0; xt < this.xtiles-1; xt ++) {
+            let yt = this.ytiles - 1,
+                nrgb = this.get_terrain_colour(this.pixels[yt*(this.xtiles) + xt], terrain),
+                i = (yt*this.w*this.size) + xt*this.size;
+            for (let y = 0; y < y_dist; y ++) {
+                 for (let x = 0; x < this.size; x ++) {
+                     let j = (i + (y*this.w) + x) * 4;
+                     this.imgData[j] = nrgb[0];
+                     this.imgData[j+1] = nrgb[1];
+                     this.imgData[j+2] = nrgb[2];
+                     this.imgData[j+3] = 255;
+                 }
+            }
+        }
+        //draw along the right
+        for (let yt = 0; yt < this.ytiles-1; yt ++) {
+            let xt = this.xtiles - 1,
+                nrgb = this.get_terrain_colour(this.pixels[yt*(this.xtiles) + xt], terrain),
+                i = (yt*this.w*this.size) + xt*this.size;
+            for (let y = 0; y < this.size; y ++) {
+                for (let x = 0; x < x_dist; x ++) {
+                    let j = (i + (y*this.w) + x) * 4;
+                    this.imgData[j] = nrgb[0];
+                    this.imgData[j+1] = nrgb[1];
+                    this.imgData[j+2] = nrgb[2];
+                    this.imgData[j+3] = 255;
+                }
+            }
+        }
+        // draw bottom-right square.
+        let k = (((this.ytiles - 1) * this.w * this.size)) + ((this.xtiles - 1) * this.size),
+            nrgb = this.get_terrain_colour(this.pixels[(this.ytiles - 1)*(this.xtiles) + (this.xtiles - 1)], terrain);
+
+        for (let y = 0; y < y_dist; y ++) {
+            for (let x = 0; x < x_dist; x ++) {
+                let j = (k + (y*this.w) + x) * 4;
+                this.imgData[j] = nrgb[0];
+                this.imgData[j+1] = nrgb[1];
+                this.imgData[j+2] = nrgb[2];
+                this.imgData[j+3] = 255;
+            }
+        }
+
+
+        let i = (this.ytiles-1)
+    }
+
+    draw_tile_array(xtiles, ytiles, xsize, ysize, terrain) {
+
+        for (let yt = 0; yt < ytiles; yt ++) {
+            for (let xt = 0; xt < xtiles; xt ++) {
                 let nrgb = this.get_terrain_colour(this.pixels[yt*this.xtiles + xt], terrain),
-                    // calculate the ith offset for imagedata.
                     i = (yt*this.w*this.size) + xt*this.size;
-                for (let y = 0; y < this.size; y ++) {
-                    for (let x = 0; x < this.size; x ++) {
-                        // now iterate i -> square, j -> square and fill in the image buffer
+                // draw tile
+                for (let y = 0; y < ysize; y ++) {
+                    for (let x = 0; x < xsize; x ++) {
                         let j = (i + (y*this.w) + x) * 4;
                         this.imgData[j] = nrgb[0];
                         this.imgData[j+1] = nrgb[1];
@@ -148,6 +202,7 @@ class TilePerlinLevel extends PerlinLevel {
                 }
             }
         }
+
     }
 
 }
