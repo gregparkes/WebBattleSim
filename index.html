@@ -172,22 +172,6 @@
                                                 <p class="text-info text-center">Template types</p>
                                                 <select class="form-control" id="sel1"></select>
                                             </div>
-                                            <div class="row">
-                                                <div class="form-group col-lg-6">
-                                                    <label for="nrep">
-                                                        <a href="#" data-toggle="tooltip" title="The number of units to specify for the Republic">
-                                                            Republic:</a>
-                                                    </label>
-                                                    <input type="number" class="form-control" id="nrep" placeholder="0..1000" value="20">
-                                                </div>
-                                                <div class="form-group col-lg-6">
-                                                    <label for="ncis">
-                                                        <a href="#" data-toggle="tooltip" title="The number of units to specify for the CIS">
-                                                            CIS:</a>
-                                                    </label>
-                                                    <input type="number" class="form-control" id="ncis" placeholder="0..1000" value="25">
-                                                </div>
-                                            </div>
                                             <a href="#" title="Template definition"
                                                data-toggle="popover" data-placement="bottom" onclick="preventDefault()"
                                                data-content="Templates are predefined battles or scenarios that convey the scope of the project.">What are templates?</a>
@@ -204,7 +188,7 @@
                                     <div id="collapse2" class="panel-collapse collapse">
                                         <div class="panel-body">
                                             <div>
-                                                <label for="nrep">
+                                                <label>
                                                     <a href="#" data-toggle="tooltip" title="The maximum length of the simulation in (t) timesteps.">
                                                         Simulation Max (t):</a>
                                                 </label>
@@ -226,19 +210,62 @@
                                     <div class="panel-heading">
                                         <h4 class="panel-title"><a data-toggle="collapse" data-parent="#accordion" href="#collapse3">
                                             Map Generation:
-                                            <span class="glyphicon glyphicon-arrow-down"></span></a></h4>
+                                            <span class="glyphicon glyphicon-arrow-down"></span></a>
+                                            <label><input type="checkbox" id="map_gen_check" checked></label>
+                                        </h4>
                                     </div>
                                     <div id="collapse3" class="panel-collapse collapse">
                                         <div class="panel-body">
                                             <!-- Do something here -->
                                             <div class="form-group">
                                                 <p class="text-info text-center">Terrain Types:</p>
-                                                <select class="form-control" id="terrain1">
+                                                <select class="form-control map-gen" id="terrain1">
                                                     <option value="none">No Terrain</option>
                                                     <option value="grassland">Grassland</option>
                                                     <option value="desert">Desert</option>
                                                     <option value="tundra">Tundra</option>
                                                 </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="slidecontainer">
+                                                    <p class="text-info text-center">
+                                                        Perlin Scale:(<span id="perlin_text">4</span>)</p>
+                                                    <div class="range-wrap">
+                                                        <input type="range" min="1" max="20" value="4" class="range map-gen" id="perlin_scale">
+                                                    </div>
+                                                </div>
+                                                <div class="slidecontainer">
+                                                    <p class="text-info text-center">
+                                                        Octaves:(<span id="octave_text">1</span>)</p>
+                                                    <div class="range-wrap">
+                                                        <input type="range" min="1" max="5" value="1" class="range map-gen" id="perlin_octave">
+                                                    </div>
+                                                </div>
+                                                <div class="slidecontainer">
+                                                    <p class="text-info text-center">
+                                                        Persistance:(<span id="persistance_text">0.5</span>)</p>
+                                                    <div class="range-wrap">
+                                                        <input type="range" min="1" max="10" value="5" class="range map-gen" id="perlin_persistance">
+                                                    </div>
+                                                </div>
+                                                <div class="slidecontainer">
+                                                    <p class="text-info text-center">
+                                                        Lacunarity:(<span id="lacunarity_text">2</span>)</p>
+                                                    <div class="range-wrap">
+                                                        <input type="range" min="1" max="100" value="20" class="range map-gen" id="perlin_lacunarity">
+                                                    </div>
+                                                </div>
+                                                <div class="checkbox text-info text-center">
+                                                    <label><input type="checkbox" id="seed_check" class="map-gen">Seed:</label>
+                                                    <input type="number" class="form-control map-gen" id="perlin_seed" value="12345" disabled>
+                                                </div>
+
+                                            </div>
+                                            <div class="form-group">
+                                                <div class="checkbox text-info text-center">
+                                                    <label><input type="checkbox" id="tile_check" class="map-gen">Tile Size:(<span id="tile_text">64</span>)</label>
+                                                    <input type="range" min="3" max="8" value="6" class="range map-gen" id="tile_size" disabled>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>

@@ -71,16 +71,18 @@ const utils = {
     lerp: function(t, a, b) {
         return a + t * (b - a);
     },
+    minmax: function(t, a, b) {
+        /* Converts variable in range [a, b] to [0, 1] */
+        return (t - a) / (b - a);
+    },
     grad: function(hash, x, y, z) {
         let h = hash & 15,
             u = h < 8 ? x : y,
             v = h < 4 ? y : h===12||h===14 ? x : z;
         return ((h&1) === 0 ? u : -u) + ((h&2) === 0 ? v : -v);
     },
-    perlin: function(x, y, width, height, scale) {
-        let dx = x / width,
-            dy = y / height;
-        return PerlinNoise(scale*dx, scale*dy, .8);
+    perlin: function(x, y, scale, xoffset, yoffset) {
+        return PerlinNoise(x*scale + xoffset, y*scale + yoffset, 0.8);
     },
 };
 

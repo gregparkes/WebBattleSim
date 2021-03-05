@@ -32,7 +32,12 @@ const battle = (canvas, objects, terrain) => ({
     _xtiles: 5,
     _ytiles: 5,
     // define a map object
-    map: TileLevel(canvas.width, canvas.height),
+    map: TileLevel(canvas.width, canvas.height, terrain,
+       document.getElementById("perlin_scale").value,
+        document.getElementById("seed_check").checked ? document.getElementById("perlin_seed").value : Number.MAX_VALUE,
+        document.getElementById("perlin_octave").value,
+        document.getElementById("perlin_persistance").value,
+        document.getElementById("perlin_lacunarity").value),
     // object array for all objects
     objects: objects,
     // unit arrays
@@ -68,7 +73,13 @@ const battle = (canvas, objects, terrain) => ({
             this.t = 0;
 
             // create tile map.
-            this.map.create_simple1(this.ctx, terrain);
+            if (document.getElementById("tile_check").checked) {
+                let tile_size = Math.floor(Math.pow(2, document.getElementById("tile_size").value));
+                //this.map.create_simple2(this.ctx, terrain);
+                this.map.create_tiles(this.ctx, tile_size);
+            } else {
+                this.map.create_simple2(this.ctx);
+            }
 
             // set caches
             this.setCaches();

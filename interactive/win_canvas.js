@@ -13,6 +13,21 @@ window.onload = function() {
         grid_check = document.getElementById("disp_grid"),
         sim_templ = document.getElementById("sel1"),
         terrain_sel = document.getElementById("terrain1"),
+        // variables to do with terrain generation
+        perlin_scale = document.getElementById("perlin_scale"),
+        text_scale = document.getElementById("perlin_text"),
+        perlin_octave = document.getElementById("perlin_octave"),
+        text_octave = document.getElementById("octave_text"),
+        perlin_persist = document.getElementById("perlin_persistance"),
+        text_persist = document.getElementById("persistance_text"),
+        perlin_lacur = document.getElementById("perlin_lacunarity"),
+        text_lacur = document.getElementById("lacunarity_text"),
+        seed_check = document.getElementById("seed_check"),
+        seed_text = document.getElementById("perlin_seed"),
+        tile_check = document.getElementById("tile_check"),
+        tile_text = document.getElementById("tile_text"),
+        tile_scale = document.getElementById("tile_size"),
+        map_gen_check = document.getElementById("map_gen_check"),
         // button variables
         looping = false,
         paused = false,
@@ -22,12 +37,6 @@ window.onload = function() {
         height = canvas.height = Math.floor(pos_info.height),
         // get context.
         ctx = canvas.getContext("2d"),
-        // holding values for nrep, ncis
-        nrep_field = document.getElementById("nrep"),
-        ncis_field = document.getElementById("ncis"),
-        // size of armies
-        n1 = nrep_field.value,
-        n2 = ncis_field.value,
         // terrain default
         terra_def = terrain_map[terrain_sel.options[terrain_sel.selectedIndex].value],
         use_template = BATTLE_TEMPLATE.OPPOSITE_AGGRESSIVE,
@@ -51,6 +60,38 @@ window.onload = function() {
     grid_check.addEventListener("click", function(e) {
         IS_GRID_DISPLAYED = grid_check.checked;
     });
+    seed_check.addEventListener("click", () => {
+        seed_text.disabled = !seed_text.disabled;
+    });
+    perlin_scale.addEventListener("input", () => {
+        text_scale.innerText = "" + Math.floor(perlin_scale.value);
+    });
+    perlin_octave.addEventListener("input", () => {
+        text_octave.innerText = "" + Math.floor(perlin_octave.value);
+    });
+    perlin_persist.addEventListener("input", () => {
+        text_persist.innerText = "" + Math.floor(perlin_persist.value) / 10.0;
+    });
+    perlin_lacur.addEventListener("input", () => {
+        text_lacur.innerText = "" + Math.floor(perlin_lacur.value) / 10.0;
+    });
+    tile_scale.addEventListener("input", () => {
+        tile_text.innerText = "" + Math.floor(Math.pow(2, tile_scale.value));
+    });
+    tile_check.addEventListener("click", () => {
+        tile_scale.disabled = !tile_scale.disabled;
+    });
+    // add an event that enables or disables all of the options with class 'map-gen'.
+    map_gen_check.addEventListener("click", () => {
+        if (map_gen_check.checked) {
+            $(".map-gen").prop("disabled", false);
+            seed_text.disabled = !seed_check.checked;
+            tile_scale.disabled = !tile_check.checked;
+        } else {
+            $(".map-gen").prop("disabled", true);
+        }
+
+    })
 
     // log
     console.log(battle);
@@ -128,8 +169,6 @@ window.onload = function() {
         // pause the sim
         pause_sim(e);
         // should have access to 'var' variables as declared in win_canvas.js
-        n1 = nrep_field.value;
-        n2 = ncis_field.value;
         use_template = btemplate_map[sim_templ.options[sim_templ.selectedIndex].value];
 
         draw.cls(ctx, battle.field.width, battle.field.height);

@@ -154,6 +154,7 @@ class Unit extends Combative {
             draw.arrow(ctx, this.x, this.y,
                 this._angle, this.color, this.sizebot,
                 this.sizelen);
+            draw.arrow_edge(ctx, this.x, this.y, this._angle, this.sizebot, this.sizelen);
             // draw a health bar on top if damaged
             if (this.hp < this.MAX_HP && IS_HP_DISPLAYED) {
                 draw.healthbar(ctx, this.x, this.y - 6, this.hp / this.MAX_HP);

@@ -4,8 +4,10 @@ terrains.
 
 const TILESTACK = {
     Grassland: [
-        {r: 0.4, color: [0, 102, 255]},
-        {r: 1.0, color: [51, 153, 51]}
+        {r: 0.35, color: [0, 102, 255]},
+        {r: 0.4, color: [255, 255, 102]},
+        {r: 0.5, color: [51, 153, 51]},
+        {r: 1.0, color: [0, 102, 0]}
     ],
     Tundra: [
         {r: 0.2, color: [0, 255, 255]},

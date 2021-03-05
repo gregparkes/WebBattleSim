@@ -22,6 +22,24 @@ const draw = {
         ctx.restore();
     },
 
+    arrow_edge: function(ctx, x, y, angle, bottom=8, length=13) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(angle);
+        ctx.beginPath();
+        ctx.fillStyle = "#000000";
+
+        let _arr_len = length / 2,
+            _arr_bot = bottom / 2;
+
+        ctx.moveTo(_arr_len, 0);
+        ctx.lineTo(-_arr_len, -_arr_bot);
+        ctx.lineTo(-_arr_len, _arr_bot);
+        ctx.lineTo(_arr_len, 0);
+        ctx.stroke();
+        ctx.restore();
+    },
+
     line_single: function(ctx, x1, y1, x2, y2, color, lw=1) {
         ctx.strokeStyle = color;
         ctx.lineWidth = lw;
