@@ -31,14 +31,18 @@ const battle = (canvas, objects, terrain) => ({
     // define the number of xtiles and ytiles
     _xtiles: 5,
     _ytiles: 5,
-    // define a map object
-    map: TileLevel(canvas.width, canvas.height, terrain,
-       document.getElementById("perlin_scale").value,
-        document.getElementById("seed_check").checked ? document.getElementById("perlin_seed").value : Number.MAX_VALUE,
-        document.getElementById("perlin_octave").value,
-        document.getElementById("perlin_persistance").value,
-        document.getElementById("perlin_lacunarity").value),
-
+    // define a perlin object to hold all these parameters.
+    perlin: {
+        scale: document.getElementById("perlin_scale").value,
+        seed: document.getElementById("seed_check").checked ? document.getElementById("perlin_seed").value : Number.MAX_VALUE,
+        octaves: document.getElementById("perlin_octave").value,
+        persistance: document.getElementById("perlin_persistance").value / 10.0,
+        lacunarity: document.getElementById("perlin_lacunarity").value / 10.0
+    },
+    terrain_type: terrain,
+    // define a map object - we will instantiate in the start method.
+    level: null,
+    // whether we have a map or not to draw.
     is_map_drawn: document.getElementById("map_gen_check").checked,
     // object array for all objects
     objects: objects,
@@ -79,10 +83,13 @@ const battle = (canvas, objects, terrain) => ({
                 // create background map.
                 if (document.getElementById("tile_check").checked) {
                     let tile_size = Math.floor(Math.pow(2, document.getElementById("tile_size").value));
+                    // create our map
+                    this.level = new TilePerlinLevel(this.ctx, this.field.width, this.field.height, tile_size);
                     //this.map.create_simple2(this.ctx, terrain);
-                    this.map.create_tiles(this.ctx, tile_size);
+                    this.level.create(this.perlin, this.terrain_type);
                 } else {
-                    this.map.create_simple2(this.ctx);
+                    this.level = new PerlinLevel(this.ctx, this.field.width, this.field.height);
+                    this.level.create(this.perlin, this.terrain_type);
                 }
             }
 
@@ -181,7 +188,7 @@ const battle = (canvas, objects, terrain) => ({
         let render_f = (element, i) => element.render(this.ctx);
         // render tilemap first
         if (this.is_map_drawn) {
-            this.map.render(this.ctx);
+            this.level.render(this.ctx);
         }
 
         // render obstacles first

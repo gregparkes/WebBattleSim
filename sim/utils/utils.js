@@ -84,6 +84,10 @@ const utils = {
     perlin: function(x, y, scale, xoffset, yoffset) {
         return PerlinNoise(x*scale + xoffset, y*scale + yoffset, 0.8);
     },
+    rgb_greyscale: function(value) {
+        /* converts a value in range [0..1] to greyscale RGB */
+        return [Math.floor(value*255), Math.floor(value*255), Math.floor(value*255)];
+    }
 };
 
 String.prototype.format = function (args) {

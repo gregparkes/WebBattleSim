@@ -29,7 +29,7 @@
     <script type="text/javascript" src="sim/base/sprite.js"></script>
     <script type="text/javascript" src="sim/base/combative.js"></script>
     <script type="text/javascript" src="sim/background/tilestack.js"></script>
-    <script type="text/javascript" src="sim/background/map.js"></script>
+    <script type="text/javascript" src="sim/background/level.js"></script>
     <script type="text/javascript" src="sim/units/unit.js"></script>
     <script type="text/javascript" src="sim/units/jedi.js"></script>
     <script type="text/javascript" src="sim/units/unit_special.js"></script>
@@ -224,6 +224,7 @@
                                                     <option value="grassland">Grassland</option>
                                                     <option value="desert">Desert</option>
                                                     <option value="tundra">Tundra</option>
+                                                    <option value="alien">Alien</option>
                                                 </select>
                                             </div>
                                             <div class="form-group">
@@ -264,7 +265,7 @@
                                             <div class="form-group">
                                                 <div class="checkbox text-info text-center">
                                                     <label><input type="checkbox" id="tile_check" class="map-gen" checked>Tile Size:(<span id="tile_text">64</span>)</label>
-                                                    <input type="range" min="3" max="8" value="6" class="range map-gen" id="tile_size">
+                                                    <input type="range" min="0" max="8" value="4" class="range map-gen" id="tile_size">
                                                 </div>
                                             </div>
                                         </div>

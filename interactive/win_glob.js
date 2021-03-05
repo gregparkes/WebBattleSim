@@ -16,5 +16,6 @@ const terrain_map = {
     "none": null,
     "grassland": TILESTACK.Grassland,
     "desert": TILESTACK.Desert,
-    "tundra": TILESTACK.Tundra
+    "tundra": TILESTACK.Tundra,
+    "alien": TILESTACK.Alien
 };
