@@ -18,6 +18,9 @@ a, a:hover {
 canvas {
     border: 1px solid #f1f1f1;
     width: 100%;
+}
+
+.canvas {
     height: 600px;
 }
 

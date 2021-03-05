@@ -14,7 +14,9 @@ const TileLevel = (width, height, stack, scale, seed,
     pixels: null,
     image: null,
     imgData: null,
+    // if we use tiles or not
     tiled: false,
+    // the number of tiles in the domain.
     xtiles: 0,
     ytiles: 0,
     // a TILESTACK.* option.
@@ -75,17 +77,42 @@ const TileLevel = (width, height, stack, scale, seed,
 
     create_tiles: function(ctx, square) {
         /* Create a small subsection of xtiles*ytiles and draw as fillrects, significantly more efficient */
+        this.image = ctx.createImageData(this.width, this.height);
+        this.imgData = this.image.data;
+
+        // create tiles
         this.tiled = true;
         this.xtiles = Math.floor(this.width / square);
         this.ytiles = Math.floor(this.height / square);
         // construct a pixel array where each pixel refers to a TILE color rather than the full canvas.
         this.construct_pixel_array(this.xtiles, this.ytiles);
+        // now we draw the 'image' using our tile array.
+
+        for (let yt = 0; yt < this.ytiles; yt ++) {
+            for (let xt = 0; xt < this.xtiles; xt ++) {
+                // fetch the colour for this tile.
+                let nrgb = this.get_stack_level(this.pixels[yt*this.xtiles + xt]),
+                    // calculate the ith offset for imagedata.
+                    i = (yt*this.width*square) + xt*square;
+                    for (let y = 0; y < square; y ++) {
+                        for (let x = 0; x < square; x ++) {
+                            // now iterate i -> square, j -> square and fill in the image buffer
+                            let j = (i + (y*this.width) + x) * 4;
+                            this.imgData[j] = nrgb[0];
+                            this.imgData[j+1] = nrgb[1];
+                            this.imgData[j+2] = nrgb[2];
+                            this.imgData[j+3] = 255;
+                        }
+                    }
+            }
+        }
+
     },
 
     construct_pixel_array: function(w, h) {
         this.pixels = new Float32Array(w*h);
 
-        let xoff = (this.seed === Number.MAX_VALUE) ? utils.randomInt(-100000,100000) : this.seed,
+        let xoff = (this.seed === Number.MAX_VALUE) ? utils.randomInt(-100000,100000) : -this.seed,
             yoff = (this.seed === Number.MAX_VALUE) ? utils.randomInt(-100000,100000) : -this.seed,
             pix_min = Number.MAX_VALUE,
             pix_max = Number.MIN_VALUE,
@@ -144,8 +171,9 @@ const TileLevel = (width, height, stack, scale, seed,
     render: function(ctx) {
         // swap the buffer
         if (this.tiled) {
-            let xs = this.width / this.xtiles,
-                ys = this.height / this.ytiles;
+            /*
+            let xs = Math.ceil(this.width / this.xtiles),
+                ys = Math.ceil(this.height / this.ytiles);
             // draw tiles as an array of rects
             for (let y = 0; y < this.ytiles; y++) {
                 for (let x = 0; x < this.xtiles; x++) {
@@ -153,6 +181,8 @@ const TileLevel = (width, height, stack, scale, seed,
                     ctx.fillRect(x*xs,y*ys,xs,ys);
                 }
             }
+            */
+            if (this.image !== null) ctx.putImageData(this.image, 0, 0);
 
         } else {
             if (this.image !== null) ctx.putImageData(this.image, 0, 0);

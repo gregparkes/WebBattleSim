@@ -38,6 +38,8 @@ const battle = (canvas, objects, terrain) => ({
         document.getElementById("perlin_octave").value,
         document.getElementById("perlin_persistance").value,
         document.getElementById("perlin_lacunarity").value),
+
+    is_map_drawn: document.getElementById("map_gen_check").checked,
     // object array for all objects
     objects: objects,
     // unit arrays
@@ -72,13 +74,16 @@ const battle = (canvas, objects, terrain) => ({
             this.running = true;
             this.t = 0;
 
-            // create tile map.
-            if (document.getElementById("tile_check").checked) {
-                let tile_size = Math.floor(Math.pow(2, document.getElementById("tile_size").value));
-                //this.map.create_simple2(this.ctx, terrain);
-                this.map.create_tiles(this.ctx, tile_size);
-            } else {
-                this.map.create_simple2(this.ctx);
+            // only draw a map if the map generation checkbox is checked
+            if (this.is_map_drawn) {
+                // create background map.
+                if (document.getElementById("tile_check").checked) {
+                    let tile_size = Math.floor(Math.pow(2, document.getElementById("tile_size").value));
+                    //this.map.create_simple2(this.ctx, terrain);
+                    this.map.create_tiles(this.ctx, tile_size);
+                } else {
+                    this.map.create_simple2(this.ctx);
+                }
             }
 
             // set caches
@@ -175,7 +180,9 @@ const battle = (canvas, objects, terrain) => ({
 
         let render_f = (element, i) => element.render(this.ctx);
         // render tilemap first
-        this.map.render(this.ctx);
+        if (this.is_map_drawn) {
+            this.map.render(this.ctx);
+        }
 
         // render obstacles first
         this.obstacles.forEach(render_f);
