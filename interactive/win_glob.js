@@ -14,8 +14,8 @@ const btemplate_map = {
 
 const terrain_map = {
     "none": null,
-    "grassland": TILESTACK.Grassland,
-    "desert": TILESTACK.Desert,
-    "tundra": TILESTACK.Tundra,
-    "alien": TILESTACK.Alien
+    "grassland": TILE_LAYER.Grassland,
+    "desert": TILE_LAYER.Desert,
+    "tundra": TILE_LAYER.Tundra,
+    "alien": TILE_LAYER.Alien
 };

@@ -9,7 +9,7 @@ class Level {
         // define an image and imageData handle
         this.image = ctx.createImageData(width, height);
         this.imgData = this.image.data;
-        // define a 'pixel' array
+        // define a 'pixel' array - this will hold the 'heightmap' value at each pixel, or tile.
         this.pixels = null;
     }
 
@@ -29,7 +29,7 @@ class PerlinLevel extends Level {
         /* Creates the perlin level.
         *
         * Perlin: {seed, scale, octaves, persistance, lacunarity}
-        * terrain must be an instance of TILESTACK.*
+        * terrain must be an instance of Tile_layer.*
         * */
         this.make_image_array(this.w, this.h, perlin);
 
@@ -98,13 +98,13 @@ class PerlinLevel extends Level {
         if (terrain === null) {
             return utils.rgb_greyscale(value);
         } else {
-            for (let i = 0; i < terrain.length - 1; i++) {
-                if (value < (terrain[i].r)) {
-                    return terrain[i].color;
+            for (let i = 0; i < terrain.tiles.length - 1; i++) {
+                if (value < (terrain.weights[i])) {
+                    return terrain.tiles[i].color;
                 }
             }
             // check if its the last level also
-            return terrain[terrain.length - 1].color;
+            return terrain.tiles[terrain.tiles.length - 1].color;
         }
     }
 
@@ -125,12 +125,12 @@ class TilePerlinLevel extends PerlinLevel {
         /* Creates the perlin tile level.
         *
         * Perlin: {seed, scale, octaves, persistance, lacunarity}
-        * terrain must be an instance of TILESTACK.*
+        * terrain must be an instance of Tile_layer.*
         * */
         this.make_image_array(this.xtiles, this.ytiles, perlin);
 
         // draw tiles from xtiles - 1, ytiles - 1
-        this.draw_tile_array(this.xtiles - 1, this.ytiles - 1, this.size, this.size, terrain);
+        this._draw_tile_array(this.xtiles - 1, this.ytiles - 1, this.size, this.size, terrain);
 
         /* distance remaining to fill in for a tile */
         let x_dist = this.w - ((this.xtiles - 1) * this.size),
@@ -141,68 +141,60 @@ class TilePerlinLevel extends PerlinLevel {
             let yt = this.ytiles - 1,
                 nrgb = this.get_terrain_colour(this.pixels[yt*(this.xtiles) + xt], terrain),
                 i = (yt*this.w*this.size) + xt*this.size;
-            for (let y = 0; y < y_dist; y ++) {
-                 for (let x = 0; x < this.size; x ++) {
-                     let j = (i + (y*this.w) + x) * 4;
-                     this.imgData[j] = nrgb[0];
-                     this.imgData[j+1] = nrgb[1];
-                     this.imgData[j+2] = nrgb[2];
-                     this.imgData[j+3] = 255;
-                 }
-            }
+            this._draw_inner_image(i, nrgb, this.size, y_dist);
         }
         //draw along the right
         for (let yt = 0; yt < this.ytiles-1; yt ++) {
             let xt = this.xtiles - 1,
                 nrgb = this.get_terrain_colour(this.pixels[yt*(this.xtiles) + xt], terrain),
                 i = (yt*this.w*this.size) + xt*this.size;
-            for (let y = 0; y < this.size; y ++) {
-                for (let x = 0; x < x_dist; x ++) {
-                    let j = (i + (y*this.w) + x) * 4;
-                    this.imgData[j] = nrgb[0];
-                    this.imgData[j+1] = nrgb[1];
-                    this.imgData[j+2] = nrgb[2];
-                    this.imgData[j+3] = 255;
-                }
-            }
+
+            this._draw_inner_image(i, nrgb, x_dist, this.size);
         }
         // draw bottom-right square.
         let k = (((this.ytiles - 1) * this.w * this.size)) + ((this.xtiles - 1) * this.size),
             nrgb = this.get_terrain_colour(this.pixels[(this.ytiles - 1)*(this.xtiles) + (this.xtiles - 1)], terrain);
-
-        for (let y = 0; y < y_dist; y ++) {
-            for (let x = 0; x < x_dist; x ++) {
-                let j = (k + (y*this.w) + x) * 4;
-                this.imgData[j] = nrgb[0];
-                this.imgData[j+1] = nrgb[1];
-                this.imgData[j+2] = nrgb[2];
-                this.imgData[j+3] = 255;
-            }
-        }
-
-
-        let i = (this.ytiles-1)
+        this._draw_inner_image(k, nrgb, x_dist, y_dist);
     }
 
-    draw_tile_array(xtiles, ytiles, xsize, ysize, terrain) {
+    tileAt(x, y, terrain) {
+        /* Returns the tile type at pixel (x, y) */
+        return this.getTile(this.pixels[Math.floor(y / this.size) * this.xtiles + Math.floor(x / this.size)], terrain);
+    }
+
+    getTile(value, terrain = null) {
+        /* assumes this.pixels is full, converts 'value' to RGB array */
+        for (let i = 0; i < terrain.tiles.length - 1; i++) {
+            if (value < (terrain.weights[i])) {
+                return terrain.tiles[i];
+            }
+        }
+        // check if its the last level also
+        return terrain.tiles[terrain.tiles.length - 1];
+    }
+
+    _draw_tile_array(xtiles, ytiles, xsize, ysize, terrain) {
 
         for (let yt = 0; yt < ytiles; yt ++) {
             for (let xt = 0; xt < xtiles; xt ++) {
                 let nrgb = this.get_terrain_colour(this.pixels[yt*this.xtiles + xt], terrain),
                     i = (yt*this.w*this.size) + xt*this.size;
                 // draw tile
-                for (let y = 0; y < ysize; y ++) {
-                    for (let x = 0; x < xsize; x ++) {
-                        let j = (i + (y*this.w) + x) * 4;
-                        this.imgData[j] = nrgb[0];
-                        this.imgData[j+1] = nrgb[1];
-                        this.imgData[j+2] = nrgb[2];
-                        this.imgData[j+3] = 255;
-                    }
-                }
+                this._draw_inner_image(i, nrgb, xsize, ysize);
             }
         }
+    }
 
+    _draw_inner_image(i_start, nrgb, xsize, ysize) {
+        for (let y = 0; y < ysize; y ++) {
+            for (let x = 0; x < xsize; x ++) {
+                let j = (i_start + (y*this.w) + x) * 4;
+                this.imgData[j] = nrgb[0];
+                this.imgData[j+1] = nrgb[1];
+                this.imgData[j+2] = nrgb[2];
+                this.imgData[j+3] = 255;
+            }
+        }
     }
 
 }

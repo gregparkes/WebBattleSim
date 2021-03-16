@@ -15,7 +15,7 @@ const battle = (canvas, objects, terrain) => ({
     ctx: canvas.getContext("2d"),
     // game logic mechanics from simulation params
     UNIT_COLLISION: false,
-    OBSTACLE_COLLISION: false,
+    TILE_COLLISION: false,
     // frames
     t: 0,
     // time
@@ -71,7 +71,7 @@ const battle = (canvas, objects, terrain) => ({
         if (!this.running) {
             // check whether mechanics are set
             this.UNIT_COLLISION = document.getElementById("unit_collision").checked;
-            this.OBSTACLE_COLLISION = document.getElementById("obstacle_collision").checked;
+            this.TILE_COLLISION = document.getElementById("tile_collision").checked;
             // set the t_max
             this.T_MAX = document.getElementById("sim_max").value;
             // start running
@@ -218,15 +218,16 @@ const battle = (canvas, objects, terrain) => ({
         this.ctx.strokeText(stats, this.field.width - 275, this.field.height - 20);
     },
 
-    _render_grid: function(ctx, nx = 10, ny = 10) {
+    _render_grid: function(ctx) {
         // attempts to render a grid of squares over the domain.
-        let dx = this.field.width / nx,
-            dy = this.field.height / ny;
-        for (let gx = 1; gx < nx; gx++) {
-            draw.line_single(ctx, dx*gx, 0, dx*gx, this.field.height);
+        let xtiles = this.field.width / this.level.size;
+        let ytiles = this.field.height / this.level.size;
+
+        for (let gx = 1; gx < xtiles; gx++) {
+            draw.line_single(ctx, gx*this.level.size, 0, gx*this.level.size, this.field.height);
         }
-        for (let gy = 1; gy < ny; gy++) {
-            draw.line_single(ctx, 0, dy*gy, this.field.width, dy*gy);
+        for (let gy = 1; gy < ytiles; gy++) {
+            draw.line_single(ctx, 0, gy*this.level.size, this.field.width, gy*this.level.size);
         }
     }
 

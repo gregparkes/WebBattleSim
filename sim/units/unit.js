@@ -31,52 +31,55 @@ class Unit extends Combative {
         this.sizelen = 17;
 
         this._crit_this_round = false;
+
+        this.tile_hover = null;
+        // a boolean for determining whether we have clicked this.
+        this.is_selected = false;
     }
     
-    _unit_collision_check(md, speed_modifier) {
+    _unit_collision_check(md, s) {
         // iterate over every alive unit and check (assuming not us) whether there is a single circle collision
         let collision_units = md._alive.filter(e =>
             ((e !== this) && collide.circle_circle(this.x, this.y, this.hit_radius * .7,
                 e.x, e.y, e.hit_radius * .7))
         );
-
+        // oscillate
         if (collision_units.length > 0) {
-            // move away from the first collided object
-            let e = collision_units[0];
-            // update dx, dy, _dist, nddx and nddy to target
-            this.updateToTarget(e, false, true);
-            // collision has occurred
-            this.translate(md, this.speed * -0.3 * speed_modifier);
-            // update back to current target
+            this.updateToTarget(collision_units[0], false, true);
+            this.translate(md, this.speed*-.3*s);
             this.updateToTarget();
-        } else {
-            // collision has not occured
-            this.translate(md, this.speed * speed_modifier);
+            return true;
         }
-    }
-
-    _obstacle_collision_check(md, speed_modifier) {
-        // iterate over collision objects and see if we hit any of them
-        let obsts_hit = md.obstacles.filter(o =>
-            collide.circle_rect(this.x, this.y, this.hit_radius, o.x, o.y, o.w, o.h));
-
-        if (obsts_hit.length === 0) {
-            this.translate(md, this.speed * speed_modifier);
-        } else {
-            // we hit something, don't move.
-        }
+        return false;
     }
     // public functions
-    
-    move(md, speed_modifier=1.0) {
-        if (md.UNIT_COLLISION) {
-            this._unit_collision_check(md, speed_modifier);
-        } else if(md.OBSTACLE_COLLISION) {
-            this._obstacle_collision_check(md, speed_modifier);
+
+    _tile_collision_check(md, s) {
+        /* check to see if the updated position moves onto an unpassable tile, and if so return true.
+         */
+        // check if, after translation, we move onto another tile
+        let fx = this.x + (this._nddx * s),
+            fy = this.y + (this._nddy * s),
+            tile_other = md.level.tileAt(fx, fy, md.terrain_type);
+
+        return !tile_other.passable;
+    }
+
+    move(md, speed=1.0) {
+        // check what tile we are currently on.
+        this.tile_hover = md.level.tileAt(this.x, this.y, md.terrain_type);
+
+        // if we have tile collision on
+        if (md.TILE_COLLISION && this._tile_collision_check(md, speed)) {
+            // AND we collide with a tile, block
+            return;
         }
-        else {
-            this.translate(md, this.speed * speed_modifier);
+        // if we collide with another unit..
+        if (md.UNIT_COLLISION && this._unit_collision_check(md, speed)) {
+            return;
         }
+        // else translate.
+        this.translate(md, this.speed*speed);
     }
     
     isTargetInRange() {
@@ -159,9 +162,16 @@ class Unit extends Combative {
             if (this.hp < this.MAX_HP && IS_HP_DISPLAYED) {
                 draw.healthbar(ctx, this.x, this.y - 6, this.hp / this.MAX_HP);
             }
+            /*
+            if (this.tile_hover) {
+                draw.text(ctx, this.x, this.y, this.tile_hover.name, [255, 0, 255]);
+            }
+             */
+
         } else {
             draw.cross(ctx, this.x, this.y, this.color, this.sizebot);
         }
+
     }
 
 }

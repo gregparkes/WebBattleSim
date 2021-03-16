@@ -75,6 +75,12 @@ const draw = {
         ctx.fillText("CRIT", x, y);
     },
 
+    text: function(ctx, x, y, text, color) {
+        ctx.font = "10px Arial";
+        ctx.fillStyle = "rgba({0},{1},{2},1.0".format(color);
+        ctx.fillText(text, x, y);
+    },
+
     cross: function(ctx, x, y, color, size=8) {
         // this function draws a full cross (dead) of fixed size
         ctx.save();
