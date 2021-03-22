@@ -60,8 +60,7 @@ class WallSpawner extends Spawner {
     }
 
     spawn(md) {
-        let i = md.units.length,
-            x = 10,
+        let x = 10,
             y = 10;
 
         if (this.wall === "left") {

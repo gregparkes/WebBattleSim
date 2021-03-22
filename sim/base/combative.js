@@ -10,6 +10,13 @@ directions of which way to go.
 
 class Combative extends Sprite {
 
+    /**
+     * Creates a 'combative'.
+     * @param x : float
+     * @param y : float
+     * @param team : number
+     * @param con : number
+     */
     constructor(x, y, team, con) {
         super(x, y, team);
         // set ID and hit points
@@ -20,28 +27,24 @@ class Combative extends Sprite {
         // a bunch of hidden parameters for directional derivatives
         this.dx = 0.0;
         this.dy = 0.0;
+
+        // floats
         this._nddx = 0.0;
         this._nddy = 0.0;
         this._dist = 0.0;
         this._angle = 0.0;
     }
 
-    // with target set, we can calculate distances and angles to this
-    // target
-
+    /**
+     * Updates the derivative variables to the new target location.
+     * @param other : {}
+     * @param update_angle : boolean
+     * @param add_perturbation : boolean
+     */
     updateToTarget(other = this.target,
                    update_angle = true,
                    add_perturbation = false) {
-        /* Updates the derivatives and direction of the unit with. respect. to. the target.
 
-        Assumes that 'other' has position 'x' and 'y' properties.
-
-            other : Unit or Combative
-            update_angle : bool
-                Whether to update the angle the unit is facing (or not).
-            add_perturbation : bool
-                Adds small noise to x and y to make it easier with unit collision.
-         */
         if (other) {
             if (add_perturbation)
             {
@@ -63,12 +66,12 @@ class Combative extends Sprite {
         }
     }
 
+    /**
+     * Moves the combative in the direction of its derivative.
+     * @param md : battle
+     * @param speed : float
+     */
     translate(md, speed) {
-        /* Moves the Combative according to its target derivative.
-            md : the battleground data
-            speed : float
-                Speed parameter modifier.
-         */
         this.x += this._nddx * speed;
         this.y += this._nddy * speed;
         // bounds check to edge of the map

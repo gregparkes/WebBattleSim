@@ -119,6 +119,9 @@ class TilePerlinLevel extends PerlinLevel {
         // set number of x tiles and y tiles
         this.xtiles = Math.floor(width / tile_size) + 1;
         this.ytiles = Math.floor(height / tile_size) + 1;
+
+        // define a graph to use Astar with
+        this.graph = new Graph(this.xtiles, this.ytiles);
     }
 
     create(perlin, terrain) {
@@ -131,6 +134,15 @@ class TilePerlinLevel extends PerlinLevel {
 
         // draw tiles from xtiles - 1, ytiles - 1
         this._draw_tile_array(this.xtiles - 1, this.ytiles - 1, this.size, this.size, terrain);
+
+        /* fill our Graph with node information about whether the tile is passable or not. */
+        for (let yt = 0; yt < this.ytiles; yt ++) {
+            for (let xt = 0; xt < this.xtiles; xt ++) {
+                let t = this.getTile(this.pixels[yt*this.xtiles+xt], terrain);
+                this.graph.addNode(xt, yt, t.passable ? 1 : 0);
+            }
+        }
+        this.graph.init();
 
         /* distance remaining to fill in for a tile */
         let x_dist = this.w - ((this.xtiles - 1) * this.size),
@@ -157,11 +169,25 @@ class TilePerlinLevel extends PerlinLevel {
         this._draw_inner_image(k, nrgb, x_dist, y_dist);
     }
 
+    /**
+     * Given an absolute position on the screen, fetch the underlying tile.
+     * @param x : float (pixel)
+     * @param y : float (pixel}
+     * @param terrain : {TILE_LAYER}
+     * @returns {{color: *, passable: *, name: *}|*}
+     */
     tileAt(x, y, terrain) {
         /* Returns the tile type at pixel (x, y) */
         return this.getTile(this.pixels[Math.floor(y / this.size) * this.xtiles + Math.floor(x / this.size)], terrain);
     }
 
+    /**
+     * Fetches the correct tile corresponding to it's given weight.
+     * @param value : float
+     *  The weight value corresponding to the height map.
+     * @param terrain : {TILE_LAYER}
+     * @returns {{color: *, passable: *, name: *}|*}
+     */
     getTile(value, terrain = null) {
         /* assumes this.pixels is full, converts 'value' to RGB array */
         for (let i = 0; i < terrain.tiles.length - 1; i++) {

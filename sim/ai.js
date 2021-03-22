@@ -175,8 +175,4 @@ const AI = {
         }
     },
 
-    defensive: function(u, md) {
-
-    }
-
 };

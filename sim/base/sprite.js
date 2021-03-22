@@ -32,6 +32,13 @@ and performs bounds checking on its position.
 
 class Sprite extends CanvObj {
     // call the constructor
+
+    /**
+     * Creates a sprite.
+     * @param x : float
+     * @param y : float
+     * @param team : number
+     */
     constructor(x, y, team) {
         super();
         this.x = x;

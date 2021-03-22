@@ -17,6 +17,12 @@ const Dice = {
         return (utils.randomInt(0, 8) + 1) + (utils.randomInt(0, 8) + 1);
     },
 
+    /**
+     * Rolls a number of dice, each with so many sides.
+     * @param ndie : int
+     * @param nsides : int
+     * @returns {number}
+     */
     roll: function(ndie, nsides) {
         // given number of die and number of sides on these die, roll some random number.
         let _sum = 0.0;
@@ -26,8 +32,12 @@ const Dice = {
         return _sum;
     },
 
+    /**
+     * uses the D&D roll number system, e.g "1d20", for one 20-sided die, "2d8" for 8-sided 2 dice
+     * @param rname : string
+     * @returns {number}
+     */
     ddroll: function(rname) {
-        // uses the D&D roll number system, e.g "1d20", for one 20-sided die, "2d8" for 8-sided 2 dice +
         let res = rname.split("d", 2),
             ndie = parseInt(res[0]),
             nsides = parseInt(res[1]),

@@ -1,4 +1,12 @@
 const utils = {
+    /**
+     * Calculates the euclidean distance between two points.
+     * @param x1 : float
+     * @param y1 : float
+     * @param x2 : float
+     * @param y2 : float
+     * @returns {number}
+     */
     distanceXY: function(x1, y1, x2, y2) {
         /* Computes 2D euclidean distance using points x1,x2 and y1,y2.
          */
@@ -6,6 +14,13 @@ const utils = {
             dy = y2 - y1;
         return Math.sqrt(dx*dx + dy*dy);
     },
+
+    /**
+     * Calculates the euclidean distance from two derivatives.
+     * @param dx : float
+     * @param dy : float
+     * @returns {number}
+     */
     distance2XY: function(dx, dy) {
         /* Using the pre-calculated derivatives dx = x2-x1, dy = y2-y1
         Calculates the euclidean distance between them.
@@ -80,9 +95,6 @@ const utils = {
             u = h < 8 ? x : y,
             v = h < 4 ? y : h===12||h===14 ? x : z;
         return ((h&1) === 0 ? u : -u) + ((h&2) === 0 ? v : -v);
-    },
-    perlin: function(x, y, scale, xoffset, yoffset) {
-        return PerlinNoise(x*scale + xoffset, y*scale + yoffset, 0.8);
     },
     rgb_greyscale: function(value) {
         /* converts a value in range [0..1] to greyscale RGB */

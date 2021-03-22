@@ -1,4 +1,11 @@
-/* A tile factory object */
+/**
+ * A tile factory for generating tiles.
+ * @param name : string
+ * @param color : Array
+ * @param passable : boolean
+ * @returns {{color, passable, name}}
+ * @constructor
+ */
 const Tile = (name, color, passable) => ({
     name: name,
     color: color,

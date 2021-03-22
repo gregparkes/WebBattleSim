@@ -2,6 +2,15 @@
 *  Taken from: http://asserttrue.blogspot.com/2011/12/perlin-noise-in-javascript_31.html
 * */
 
+
+/**
+ * Creates some perlin noise at location (x, y).
+ * @param x : int
+ * @param y : int
+ * @param z : {int}
+ * @returns {*}
+ * @constructor
+ */
 PerlinNoise = function(x, y, z) {
 
     let p = new Array(512),

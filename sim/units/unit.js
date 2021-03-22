@@ -9,6 +9,21 @@ of AI capabilities.
 
 class Unit extends Combative {
 
+    /**
+     * Creates a new unit object.
+     * @param x : float
+     * @param y : float
+     * @param atk : number
+     * @param dex : number
+     * @param con : number
+     * @param mvs : float
+     * @param range : float
+     * @param team : number
+     * @param fire_rate : float
+     * @param dflr : float
+     * @param ai : function
+     * @param move_mode : string
+     */
     constructor(x, y, atk, dex, con, mvs, range,
                 team, fire_rate, dflr, ai) {
         // call element
@@ -35,8 +50,12 @@ class Unit extends Combative {
         this.tile_hover = null;
         // a boolean for determining whether we have clicked this.
         this.is_selected = false;
+        // a cache for astar search
+        this._astar_result = null;
+
     }
-    
+
+
     _unit_collision_check(md, s) {
         // iterate over every alive unit and check (assuming not us) whether there is a single circle collision
         let collision_units = md._alive.filter(e =>
@@ -142,10 +161,43 @@ class Unit extends Combative {
     update(md) {
         this.alive = this.hp > 0.0;
         if (this.alive) {
-            // update distance to target metrics
-            this.updateToTarget();
-            // make an AI decision on what to do in this circumstance.
-            this.ai(this, md);
+
+            /*
+            If the unit's movement is euclidean, we update to the target, else we derive derivatives
+            from the A* star aglorithms' next tile in the path.
+             */
+            if (md.UNIT_MOVE_MODE === "euclidean")
+            {
+                // update distance to target metrics
+                this.updateToTarget();
+                // make an AI decision on what to do in this circumstance.
+                this.ai(this, md);
+            }
+            else if (md.UNIT_MOVE_MODE === "astar")
+            {
+                let ls = this.level.size;
+
+                if ((this._astar_result === null) || Math.random() < 0.005)
+                {
+                    let tx = Math.floor(this.x / ls),
+                        ty = Math.floor(this.y / ls),
+                        ox = Math.floor(this.target.x / ls),
+                        oy = Math.floor(this.target.y / ls),
+                        start = md.level.graph.grid[ty*this.level.xtiles + tx],
+                        end = md.level.graph.grid[oy*this.level.xtiles + ox];
+                    // perform a-star search.
+                    this._astar_result = astar.search(md.level.graph, start, end);
+                    // fetch the first node and move
+                }
+                let node = this._astar_result[0],
+                    halfLevel = ls / 2.0,
+                    pix_x = (node.x * ls) - halfLevel,
+                    pix_y = (node.y * ls) - halfLevel;
+
+                // now use the node position to update to target
+                this.updateToTarget({x: pix_x, y: pix_y}, false, false);
+                this.ai(this, md);
+            }
         }
     }
     

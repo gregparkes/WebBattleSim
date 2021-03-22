@@ -1,3 +1,10 @@
+/**
+ * The main canvas object for simulating battles upon.
+ * @param canvas : HTMLCanvasElement
+ * @param objects : []
+ * @param terrain : TILE_LAYER
+ * @returns {{objects, obstacles, UNIT_COLLISION: boolean, delta: number, filter_objects: filter_objects, terrain_type, update: update, T_MIN: number, units, _c_alive: [], running: boolean, has_alive_units: (function()), T_MAX: number, now: number, render: render, TILE_COLLISION: boolean, get_enemies: (function(*): []), _xtiles: number, level: null, ctx: *, start: start, setDelta: setDelta, then: number, _alive: [], spawners, freezedelta: number, is_map_drawn: (boolean|boolean|*), projectiles: [], get_allies: (function(*): []), crits: [], setCaches: setCaches, _render_grid: _render_grid, field: {width, height}, t: number, _ytiles: number, turrets, anim_continue: (function()), perlin: {octaves, seed: (*|number), persistance: number, scale, lacunarity: number}, _r_alive: [], melees: []}}
+ */
 const battle = (canvas, objects, terrain) => ({
     /*
     our Battle object contains everything in the instance needed
@@ -16,6 +23,8 @@ const battle = (canvas, objects, terrain) => ({
     // game logic mechanics from simulation params
     UNIT_COLLISION: false,
     TILE_COLLISION: false,
+    // determine whether units move in euclidean or A* fashion
+    UNIT_MOVE_MODE: "euclidean",
     // frames
     t: 0,
     // time
