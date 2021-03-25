@@ -6,11 +6,11 @@ class Projectile extends Attack {
         // call constructor attack
         super(source, damage, is_crit);
         // define extras to a projectile
-        this.dx = source._nddx;
-        this.dy = source._nddy;
+        // calculates dx and dy based on target.
         this.vel = vel;
         this.sx = source.x;
         this.sy = source.y;
+        [this.dx, this.dy] = source.directionalDerivatives(source.target.x, source.target.y);
         // size of the projectile (ball)
         this.hit_radius = radius;
         this.max_range = source.range * 1.3;

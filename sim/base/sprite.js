@@ -35,7 +35,7 @@ class Sprite extends CanvObj {
 
     /**
      * Creates a sprite.
-     * @param x : float
+     * @param x : number
      * @param y : float
      * @param team : number
      */

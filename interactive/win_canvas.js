@@ -93,9 +93,6 @@ window.onload = function() {
 
     })
 
-    // log
-    console.log(battle);
-
     // first draw
     battle.render();
 
@@ -116,6 +113,10 @@ window.onload = function() {
             battle = use_template(canvas, terra_def);
             battle.start();
             pause_but.style.backgroundColor = start_but.style.backgroundColor;
+
+            // log
+            console.log(battle);
+
             // call the animate loop now
             animate_loop();
             // final render

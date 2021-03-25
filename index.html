@@ -28,6 +28,7 @@
     <script type="text/javascript" src="sim/utils/collide.js"></script>
     <script type="text/javascript" src="sim/base/sprite.js"></script>
     <script type="text/javascript" src="sim/base/combative.js"></script>
+    <script type="text/javascript" src="sim/base/astar.js"></script>
     <script type="text/javascript" src="sim/miscobj/tile.js"></script>
     <script type="text/javascript" src="sim/background/tile_layer.js"></script>
     <script type="text/javascript" src="sim/background/level.js"></script>
@@ -167,7 +168,7 @@
                                             Templates:
                                             <span class="glyphicon glyphicon-arrow-down"></span></a></h4>
                                     </div>
-                                    <div id="collapse1" class="panel-collapse collapse-in">
+                                    <div id="collapse1" class="panel-collapse collapse">
                                         <div class="panel-body">
                                             <div class="form-group">
                                                 <p class="text-info text-center">Template types</p>
@@ -202,6 +203,13 @@
                                                 <div class="checkbox">
                                                     <label><input type="checkbox" id="tile_collision" checked>Tile Collisions</label>
                                                 </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <p class="text-info text-center">Movement Algorithms</p>
+                                                <select class="form-control" id="movemode">
+                                                    <option value="euclidean">Euclidean</option>
+                                                    <option value="astar" selected>A*</option>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -258,8 +266,8 @@
                                                     </div>
                                                 </div>
                                                 <div class="checkbox text-info text-center">
-                                                    <label><input type="checkbox" id="seed_check" class="map-gen">Seed:</label>
-                                                    <input type="number" class="form-control map-gen" id="perlin_seed" value="12345" disabled>
+                                                    <label><input type="checkbox" id="seed_check" class="map-gen" checked>Seed:</label>
+                                                    <input type="number" class="form-control map-gen" id="perlin_seed" value="123456">
                                                 </div>
 
                                             </div>

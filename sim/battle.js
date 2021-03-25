@@ -17,14 +17,14 @@ const battle = (canvas, objects, terrain) => ({
         objects : list of [CanvObj] objects
      */
     // information about the battlefield, including w and h
-    field: {width: canvas.width, height: canvas.height},
+    field: {width: canvas.width, height: canvas.height, fixed: true},
     // drawing context
     ctx: canvas.getContext("2d"),
     // game logic mechanics from simulation params
     UNIT_COLLISION: false,
     TILE_COLLISION: false,
     // determine whether units move in euclidean or A* fashion
-    UNIT_MOVE_MODE: "euclidean",
+    UNIT_MOVE_MODE: document.getElementById("movemode")[document.getElementById("movemode").selectedIndex].value,
     // frames
     t: 0,
     // time
@@ -112,7 +112,6 @@ const battle = (canvas, objects, terrain) => ({
                     enemy = this.get_enemies(t.team);
                 t.target = enemy[utils.randomInt(0, enemy.length-1)];
             }
-            console.log(this.map);
 
             // render once before update loop
             this.render();

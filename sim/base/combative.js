@@ -28,11 +28,19 @@ class Combative extends Sprite {
         this.dx = 0.0;
         this.dy = 0.0;
 
-        // floats
+        // directional derivatives and parameters for movement.
         this._nddx = 0.0;
         this._nddy = 0.0;
         this._dist = 0.0;
         this._angle = 0.0;
+    }
+
+    directionalDerivatives(ox, oy) {
+        /* Calculates directional derivatives */
+        let dx = ox - this.x,
+            dy = oy - this.y,
+            d = utils.distance2XY(dx, dy);
+        return [dx/d, dy/d];
     }
 
     /**
@@ -61,15 +69,19 @@ class Combative extends Sprite {
             this._nddy = this.dy / this._dist;
             // update the directional angle (to plot arrow).
             if (update_angle) {
-                this._angle = Math.atan2(this.dy, this.dx);
+                this.setAngleToTarget(this.dx, this.dy);
             }
         }
+    }
+
+    setAngleToTarget(dx, dy) {
+        this._angle = Math.atan2(dy, dx);
     }
 
     /**
      * Moves the combative in the direction of its derivative.
      * @param md : battle
-     * @param speed : float
+     * @param speed : number
      */
     translate(md, speed) {
         this.x += this._nddx * speed;

@@ -4,9 +4,9 @@ const BATTLE_TEMPLATE = {
     OPPOSITE_AGGRESSIVE: function(canvas, terrain) {
         let w = canvas.width,
             h = canvas.height;
-        let g1 = unit_group.make_gaussian(CloneTrooper, 10, w * .25, 300,
+        let g1 = unit_group.make_gaussian(CloneTrooper, 2, w * .25, 300,
                 h * .25, 300, AI.aggressive),
-            g2 = unit_group.make_gaussian(B1Battledroid, 20, w * .75, w * .75 + 50,
+            g2 = unit_group.make_gaussian(B1Battledroid, 4, w * .75, w * .75 + 50,
                 h * .75, h * .75 + 50, AI.aggressive),
             // now concat to form units
             units = g1.concat(g2);

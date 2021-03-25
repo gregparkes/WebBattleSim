@@ -1,10 +1,10 @@
 const utils = {
     /**
      * Calculates the euclidean distance between two points.
-     * @param x1 : float
-     * @param y1 : float
-     * @param x2 : float
-     * @param y2 : float
+     * @param x1 : number
+     * @param y1 : number
+     * @param x2 : number
+     * @param y2 : number
      * @returns {number}
      */
     distanceXY: function(x1, y1, x2, y2) {
@@ -14,11 +14,18 @@ const utils = {
             dy = y2 - y1;
         return Math.sqrt(dx*dx + dy*dy);
     },
+    sqDistanceXY: function(x1, y1, x2, y2) {
+        /* Compares 2D euclidean distance, without sqrt. Faster.
+         */
+        let dx = x2 - x1,
+            dy = y2 - y1;
+        return dx*dx + dy*dy;
+    },
 
     /**
      * Calculates the euclidean distance from two derivatives.
-     * @param dx : float
-     * @param dy : float
+     * @param dx : number
+     * @param dy : number
      * @returns {number}
      */
     distance2XY: function(dx, dy) {

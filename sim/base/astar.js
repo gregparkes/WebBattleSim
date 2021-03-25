@@ -186,18 +186,6 @@
         this.width = width;
         // assumes all elements in gridIn are same length.
         this.height = height;
-
-        /*
-        for (let y = 0; y < height; y ++) {
-            for (let x = 0; x < width; x ++) {
-                let node = new GridNode(x, y, tiles[y*width+x]);
-                this.grid[y*width + x] = node;
-                this.nodes.push(node);
-            }
-        }
-
-        this.init();
-         */
     }
 
     Graph.prototype.addNode = function(x, y, value) {
@@ -284,47 +272,48 @@
             x = node.x,
             y = node.y,
             w = this.width,
+            i = y*w+x,
             grid = this.grid;
 
         // West
-        if (grid[y*w+x-1]) {
-            ret.push(grid[y*w+x-1]);
+        if (grid[i-1]) {
+            ret.push(grid[i-1]);
         }
 
         // East
-        if (grid[y*w+x+1]) {
-            ret.push(grid[y*w+x+1]);
+        if (grid[i+1]) {
+            ret.push(grid[i+1]);
         }
 
         // South
-        if (grid[(y-1)*w+x]) {
-            ret.push(grid[(y-1)*w+x]);
+        if (grid[i-w]) {
+            ret.push(grid[i-w]);
         }
 
         // North
-        if (grid[(y+1)*w+x]) {
-            ret.push(grid[x][y + 1]);
+        if (grid[i+w]) {
+            ret.push(grid[i+w]);
         }
 
         if (this.diagonal) {
             // Southwest
-            if (grid[(y-1)*w+x-1]) {
-                ret.push(grid[(y-1)*w+x-1]);
+            if (grid[i-w-1]) {
+                ret.push(grid[i-w-1]);
             }
 
             // Southeast
-            if (grid[(y-1)*w+x+1]) {
-                ret.push(grid[(y-1)*w+x+1]);
+            if (grid[i-w+1]) {
+                ret.push(grid[i-w+1]);
             }
 
             // Northwest
-            if (grid[(y+1)*w+x-1]) {
-                ret.push(grid[(y+1)*w+x-1]);
+            if (grid[i+w-1]) {
+                ret.push(grid[i+w-1]);
             }
 
             // Northeast
-            if (grid[(y+1)*w+x+1]) {
-                ret.push(grid[(y+1)*w+x+1]);
+            if (grid[i+w+1]) {
+                ret.push(grid[i+w+1]);
             }
         }
 
