@@ -34,6 +34,30 @@ const utils = {
          */
         return Math.sqrt(dx*dx + dy*dy);
     },
+
+    /**
+     * Calculates the distance between two vectors containing x and y.
+     * @param u
+     * @param v
+     */
+    distance: function(u, v) {
+        let dx = v.x - u.x,
+            dy = v.y - u.y;
+        return Math.sqrt(dx*dx + dy*dy);
+    },
+    sqDistance: function(u, v) {
+        let dx = v.x - u.x,
+            dy = v.y - u.y;
+        return dx*dx + dy*dy;
+    },
+
+    argmin: function(array) {
+        return [].map.call(array, (x, i) => [x, i]).reduce((r, a) => (a[0] < r[0] ? a : r))[1];
+    },
+    argmax: function(array) {
+        return [].map.call(array, (x, i) => [x, i]).reduce((r, a) => (a[0] > r[0] ? a : r))[1];
+    },
+
     rotate: function(cx, cy, x, y, angle) {
         // rotate clockwise x, y around central point cx, cy by degrees angle
         let radians = (Math.PI / 180.0) * angle,

@@ -30,6 +30,8 @@ class Unit extends Combative {
         this.sizebot = 10;
         this.sizelen = 17;
 
+        this.cooldown = 0.0;
+
         this._crit_this_round = false;
         // a cache for astar search and an index as to where we currently are.
         this._astar_result = null;
@@ -60,19 +62,19 @@ class Unit extends Combative {
         // check if, after translation, we move onto another tile
         let fx = this.x + (this._nddx * s),
             fy = this.y + (this._nddy * s),
-            tile_other = md.level.tileAt(fx, fy, md.terrain_type);
+            tile_other = md.level.tileAt(fx, fy);
 
         return !tile_other.passable;
     }
 
     move(md, speed=1.0) {
         // if we have tile collision on
-        if (md.TILE_COLLISION && this._tile_collision_check(md, speed)) {
+        if (md.parameters.IS_TILE_COLLISION && this._tile_collision_check(md, speed)) {
             // AND we collide with a tile, block
             return;
         }
         // if we collide with another unit..
-        if (md.UNIT_COLLISION && this._unit_collision_check(md, speed)) {
+        if (md.parameters.IS_UNIT_COLLISION && this._unit_collision_check(md, speed)) {
             return;
         }
         // else translate.
@@ -116,21 +118,18 @@ class Unit extends Combative {
     attack(md) {
         let mod_damage = this.roll_damage();
 
-        if (mod_damage > 0.0)
+        if (mod_damage > 0.0 && this.cooldown >= this.fire_rate)
         {
             // create an object to handle this damage output
             if (this.atk_type === AttackType.PROJECTILE) {
-                if (Math.random() < this.fire_rate) {
-                    md.projectiles.push(new Projectile(this, mod_damage, 5., 2.5, this._crit_this_round));
-                }
+                md.projectiles.push(new Projectile(this, mod_damage, 5., 2.5, this._crit_this_round));
             } else if (this.atk_type === AttackType.MELEE) {
-                if (Math.random() < this.fire_rate) {
-                    // do a swing attack..
-                    md.melees.push(new Melee(this, mod_damage, this.target));
-                }
+                md.melees.push(new Melee(this, mod_damage, this.target));
             } else {
                 alert("Attack type'" + this.atk_type + "' not recognized");
             }
+            // reset the cooldown
+            this.cooldown = 0.0;
         }
     }
     
@@ -190,15 +189,17 @@ class Unit extends Combative {
     update(md) {
         this.alive = this.hp > 0.0;
         if (this.alive) {
+            // add on the delta to our global cooldown
+            this.cooldown += md.time.delta;
             /*
             If the unit's movement is euclidean, we update to the target, else we derive derivatives
             from the A* star aglorithms' next tile in the path.
              */
-            if (md.UNIT_MOVE_MODE === "euclidean")
+            if (md.parameters.UNIT_MOVE_MODE === "euclidean")
             {
                 this.updateEuclidean(md);
             }
-            else if (md.level && md.UNIT_MOVE_MODE === "astar")
+            else if (md.level && md.parameters.UNIT_MOVE_MODE === "astar")
             {
                 this.updateAstar(md);
             }

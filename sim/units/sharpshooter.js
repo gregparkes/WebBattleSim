@@ -14,8 +14,9 @@ class CloneSharpshooter extends Unit {
     // sharpshooter projectiles move considerably faster.
     attack(md) {
         let update_damage = this.roll_damage();
-        if ((update_damage > 0.0) && (Math.random() < this.fire_rate)) {
+        if ((update_damage > 0.0) && (this.cooldown >= this.fire_rate)) {
             md.projectiles.push(new Projectile(this, update_damage, 10., 2.));
+            this.cooldown = 0.0;
         }
     }
     // draw a snipers crosshair on top
@@ -48,6 +49,10 @@ class CloneSharpshooter extends Unit {
             ctx.lineTo(0, -_true_size);
             ctx.stroke();
             ctx.restore();
+
+            if (this.hp < this.MAX_HP && IS_HP_DISPLAYED) {
+                draw.healthbar(ctx, this.x, this.y - 6, this.hp / this.MAX_HP);
+            }
 
         } else {
             draw.cross(ctx, this.x, this.y, this.color, this.sizebot);

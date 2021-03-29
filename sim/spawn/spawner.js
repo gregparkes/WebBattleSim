@@ -22,8 +22,9 @@ class Spawner extends CanvObj {
          */
         let x = utils.randomInt(10, md.field.width - 10),
             y = utils.randomInt(10, md.field.height - 10),
-            i = md.units.length,
-            u = new this.unit(i, x, y, AI.aggressive);
+            u = new this.unit(x, y, AI.aggressive);
+
+        u.target = ai_next_target.nearest(u, md);
         // push new unit on to the battle stack
         md.units.push(u);
     }
@@ -46,7 +47,6 @@ class Spawner extends CanvObj {
 }
 
 // WallSpawner, spawns units from one of the 4 walls of the canvas.
-
 class WallSpawner extends Spawner {
     /*
     spawns units from one of the 4 walls of the canvas instead of randomly anywhere
@@ -80,3 +80,4 @@ class WallSpawner extends Spawner {
     }
 
 }
+

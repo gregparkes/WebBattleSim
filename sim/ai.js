@@ -18,10 +18,10 @@ const ai_init_target = {
             L_b = b.length;
 
         for (let i = 0; i < L_a; i++) {
-            let best_distance = 1500.0,
+            let best_distance = Infinity,
                 best_index = 0;
             for (let j = 0; j < L_b; j++) {
-                let d = utils.distanceXY(a.x, a.y, b.x, b.y);
+                let d = utils.sqDistanceXY(a.x, a.y, b.x, b.y);
                 if (d < best_distance) {
                     best_distance = d;
                     best_index = j;
@@ -60,57 +60,17 @@ const ai_next_target = {
         let enemy = md.get_enemies(u.team),
             enemy_L = enemy.length;
 
-        if (enemy_L > 0) {
-            // calculate distance from each enemy.
-            let closest_dist = 1500.0,
-                closest_index = 0;
-            for (let i = 0; i < enemy_L; i++) {
-                let d = utils.distanceXY(u.x, u.y, enemy[i].x, enemy[i].y);
-                if (d < closest_dist) {
-                    closest_dist = d;
-                    closest_index = i;
-                }
-            }
-            return enemy[closest_index];
+        if (enemy_L > 1) {
+            // calculate distances
+            let dst = enemy.map(v => utils.sqDistance(v, u));
+            // now retrieve the argmin of the distance array, this is the enemy.
+            return enemy[utils.argmin(dst)];
         } else if (enemy_L === 1) {
             return enemy[0];
         } else {
             return null;
         }
     },
-
-    nearest_notarget: function(u, md) {
-        // chooses the nearest enemy with nobody else targeting them.
-        let enemy = md.get_enemies(u.team),
-            enemy_L = enemy.length,
-            ally = md.get_allies(u.team),
-            ally_L = ally.length;
-
-        if (ally_L <= 0) {
-            return ai_next_target.nearest(u, md);
-        } else {
-            if (enemy_L > 1) {
-                // calculate distance from each enemy.
-                let closest_dist = 1500.0,
-                    closest_index = 0;
-                for (let i = 0; i < enemy_L; i++) {
-                    // filter out enemy units that are already targeted
-                    let d = utils.distanceXY(u.x, u.y, enemy[i].x, enemy[i].y),
-                        is_targeted = ally.filter(a => u.target === a.target);
-                    // if is_targeted > 0, we pass
-                    if (is_targeted.length === 0 && d < closest_dist) {
-                        closest_dist = d;
-                        closest_index = i;
-                    }
-                }
-                return enemy[closest_index];
-            } else if (enemy_L === 1) {
-                return enemy[0];
-            } else {
-                return null;
-            }
-        }
-    }
 
 };
 
@@ -134,7 +94,7 @@ const AI = {
     aggressive: function(u, md, next_target=ai_next_target.nearest) {
         // an aggressive AI stance to pursue enemies and attack
         // occasionally pick a new target#
-        if (Math.random() >= 0.01 && u.isTargetAlive()) {
+        if (Math.random() > 0.01 && u.isTargetAlive()) {
             AI._aggressive_pursue(u, md);
         } else {
             u.target = next_target(u, md)
@@ -143,7 +103,7 @@ const AI = {
 
     hit_and_run: function(u, md, next_target=ai_next_target.nearest) {
         // a hit-and-run style which relies on faster speed and longer range
-        if (Math.random() >= 0.01 && u.isTargetAlive()) {
+        if (Math.random() > 0.01 && u.isTargetAlive()) {
             if ((u.speed > u.target.speed) && (u.range > u.target.range)) {
                 // we can use hit and run
                 if (u._dist > u.range) {

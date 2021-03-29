@@ -40,7 +40,8 @@ window.onload = function() {
         // terrain default
         terra_def = terrain_map[terrain_sel.options[terrain_sel.selectedIndex].value],
         use_template = BATTLE_TEMPLATE.OPPOSITE_AGGRESSIVE,
-        battle = use_template(canvas, terra_def);
+        map_level = createLevel(),
+        battle = use_template(canvas, map_level);
 
     // load information into HTML selections for simulation templates
     load_templates();
@@ -105,13 +106,44 @@ window.onload = function() {
         });
     }
 
+    function getPerlin() {
+        return {
+            scale: perlin_scale.value,
+            seed: seed_check.checked ? seed_text.value : Number.MAX_VALUE,
+            octaves: perlin_octave.value,
+            persistance: perlin_persist.value / 10.0,
+            lacunarity: perlin_lacur.value / 10.0
+        };
+    }
+
+    function createLevel() {
+        // also, if the seed is the same, do not re-create the level.
+        let level = null;
+        if (tile_check.checked) {
+            // the level is tiled, create a TilePerlinLevel
+            let tile_size = Math.floor(Math.pow(2, tile_scale.value));
+            level = new TilePerlinLevel(ctx, width, height, tile_size, terra_def);
+            // now we create it
+            level.create(getPerlin());
+        }
+        else {
+            // create a normal perlin level.
+            level = new PerlinLevel(ctx, width, height);
+            level.create(getPerlin(), terra_def);
+        }
+        return level;
+    }
+
     function reset_sim(e) {
         // only reset if we haven't ran before, or still fighting, or time exceeded.
         if (!battle.running) {
             terra_def = terrain_map[terrain_sel.options[terrain_sel.selectedIndex].value]
+            // create a level here!
+            map_level = createLevel();
             // initialise battle
-            battle = use_template(canvas, terra_def);
+            battle = use_template(canvas, map_level);
             battle.start();
+
             pause_but.style.backgroundColor = start_but.style.backgroundColor;
 
             // log
@@ -122,7 +154,6 @@ window.onload = function() {
             // final render
             battle.render();
         }
-        // prevent page top jump
     }
 
     function pause_sim(e) {

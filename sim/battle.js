@@ -2,10 +2,10 @@
  * The main canvas object for simulating battles upon.
  * @param canvas : HTMLCanvasElement
  * @param objects : []
- * @param terrain : TILE_LAYER
- * @returns {{objects, obstacles, UNIT_COLLISION: boolean, delta: number, filter_objects: filter_objects, terrain_type, update: update, T_MIN: number, units, _c_alive: [], running: boolean, has_alive_units: (function()), T_MAX: number, now: number, render: render, TILE_COLLISION: boolean, get_enemies: (function(*): []), _xtiles: number, level: null, ctx: *, start: start, setDelta: setDelta, then: number, _alive: [], spawners, freezedelta: number, is_map_drawn: (boolean|boolean|*), projectiles: [], get_allies: (function(*): []), crits: [], setCaches: setCaches, _render_grid: _render_grid, field: {width, height}, t: number, _ytiles: number, turrets, anim_continue: (function()), perlin: {octaves, seed: (*|number), persistance: number, scale, lacunarity: number}, _r_alive: [], melees: []}}
+ * @param level
+ * @returns {{objects: *[], obstacles: *[], delta: number, filter_objects: filter_objects, terrain_type: {tiles: [{color, passable, name}, {color, passable, name}, {color, passable, name}, {color, passable, name}, {color, passable, name}], weights: number[]}, update: update, T_MIN: number, units: *[], _c_alive: [], running: boolean, has_alive_units: (function()), T_MAX, now: number, render: render, get_enemies: (function(*): []), _xtiles: number, level: null, ctx: CanvasRenderingContext2D, start: start, setDelta: setDelta, then: number, _alive: [], spawners: *[], freezedelta: number, projectiles: [], get_allies: (function(*): []), crits: [], setCaches: setCaches, _render_grid: _render_grid, field: {width: number, fixed: boolean, height: number}, t: number, _ytiles: number, turrets: *[], anim_continue: (function()), perlin: {octaves, seed: (*|number), persistance: number, scale, lacunarity: number}, parameters: {IS_MAP_DRAWN: (boolean|boolean|*), IS_USING_TILES: (boolean|boolean|*), IS_UNIT_COLLISION: (boolean|boolean|*), UNIT_MOVE_MODE, IS_TILE_COLLISION: (boolean|boolean|*)}, _r_alive: [], melees: []}}
  */
-const battle = (canvas, objects, terrain) => ({
+const battle = (canvas, objects, level) => ({
     /*
     our Battle object contains everything in the instance needed
     to update our game logic for a single Battle instance.
@@ -20,39 +20,48 @@ const battle = (canvas, objects, terrain) => ({
     field: {width: canvas.width, height: canvas.height, fixed: true},
     // drawing context
     ctx: canvas.getContext("2d"),
-    // game logic mechanics from simulation params
-    UNIT_COLLISION: false,
-    TILE_COLLISION: false,
-    // determine whether units move in euclidean or A* fashion
-    UNIT_MOVE_MODE: document.getElementById("movemode")[document.getElementById("movemode").selectedIndex].value,
+
+    HTMLElem: {
+        /** Html elements that we access.*/
+        __MOVE_MODE: document.getElementById("movemode"),
+        __TILE_SIZE: document.getElementById("tile_size"),
+        __TILE_CHECK: document.getElementById("tile_check"),
+        __TILE_COLLIDE: document.getElementById("tile_collision"),
+        __UNIT_COLLIDE: document.getElementById("unit_collision"),
+        __MAP_GENERATOR: document.getElementById("map_gen_check")
+    },
+
+    parameters: {
+        /**
+         * Handle parameters drawn from the GUI.
+         */
+        IS_UNIT_COLLISION: false,
+        IS_TILE_COLLISION: true,
+        /* options of 'euclidean' and 'A*' */
+        UNIT_MOVE_MODE: "Astar",
+        IS_MAP_DRAWN: true,
+        IS_USING_TILES: true,
+    },
+
     // frames
     t: 0,
     // time
-    now: Date.now(),
-    then: Date.now(),
-    delta: 1.,
-    freezedelta: 1.,
+    time: {
+        now: Date.now(),
+        then: Date.now(),
+        delta: 1.0,
+        freezedelta: 1.0
+    },
     // running / frame-based
     running: false,
     // define a minimum and maximum frame run
     T_MIN: 100,
-    T_MAX: 2000,
+    T_MAX: document.getElementById("sim_max").value,
     // define the number of xtiles and ytiles
     _xtiles: 5,
     _ytiles: 5,
-    // define a perlin object to hold all these parameters.
-    perlin: {
-        scale: document.getElementById("perlin_scale").value,
-        seed: document.getElementById("seed_check").checked ? document.getElementById("perlin_seed").value : Number.MAX_VALUE,
-        octaves: document.getElementById("perlin_octave").value,
-        persistance: document.getElementById("perlin_persistance").value / 10.0,
-        lacunarity: document.getElementById("perlin_lacunarity").value / 10.0
-    },
-    terrain_type: terrain,
-    // define a map object - we will instantiate in the start method.
-    level: null,
-    // whether we have a map or not to draw.
-    is_map_drawn: document.getElementById("map_gen_check").checked,
+    // define a map object - first thing created
+    level: level,
     // object array for all objects
     objects: objects,
     // unit arrays
@@ -78,29 +87,16 @@ const battle = (canvas, objects, terrain) => ({
     // START FUNCTION to START the BATTLE
     start: function() {
         if (!this.running) {
-            // check whether mechanics are set
-            this.UNIT_COLLISION = document.getElementById("unit_collision").checked;
-            this.TILE_COLLISION = document.getElementById("tile_collision").checked;
-            // set the t_max
-            this.T_MAX = document.getElementById("sim_max").value;
             // start running
             this.running = true;
             this.t = 0;
 
-            // only draw a map if the map generation checkbox is checked
-            if (this.is_map_drawn) {
-                // create background map.
-                if (document.getElementById("tile_check").checked) {
-                    let tile_size = Math.floor(Math.pow(2, document.getElementById("tile_size").value));
-                    // create our map
-                    this.level = new TilePerlinLevel(this.ctx, this.field.width, this.field.height, tile_size);
-                    //this.map.create_simple2(this.ctx, terrain);
-                    this.level.create(this.perlin, this.terrain_type);
-                } else {
-                    this.level = new PerlinLevel(this.ctx, this.field.width, this.field.height);
-                    this.level.create(this.perlin, this.terrain_type);
-                }
-            }
+            // refresh parameters
+            this.parameters.IS_MAP_DRAWN = this.HTMLElem.__MAP_GENERATOR.checked;
+            this.parameters.IS_USING_TILES = this.HTMLElem.__TILE_CHECK.checked;
+            this.parameters.IS_UNIT_COLLISION = this.HTMLElem.__UNIT_COLLIDE.checked;
+            this.parameters.IS_TILE_COLLISION = this.HTMLElem.__TILE_COLLIDE.checked;
+            this.parameters.UNIT_MOVE_MODE = this.HTMLElem.__MOVE_MODE[this.HTMLElem.__MOVE_MODE.selectedIndex].value;
 
             // set caches
             this.setCaches();
@@ -145,11 +141,11 @@ const battle = (canvas, objects, terrain) => ({
     },
 
     setDelta: function() {
-        this.now = Date.now();
-        this.delta = (this.now - this.then) / 1000.; // for seconds
-        this.then = this.now;
+        this.time.now = Date.now();
+        this.time.delta = (this.time.now - this.time.then) / 1000.; // for seconds
+        this.time.then = this.time.now;
         if (this.t % 20 === 0) {
-            this.freezedelta = this.delta;
+            this.time.freezedelta = this.time.delta;
         }
     },
 
@@ -194,8 +190,9 @@ const battle = (canvas, objects, terrain) => ({
         draw.cls(this.ctx, this.field.width, this.field.height);
 
         let render_f = (element, i) => element.render(this.ctx);
+
         // render tilemap first
-        if (this.is_map_drawn) {
+        if (this.parameters.IS_MAP_DRAWN) {
             this.level.render(this.ctx);
         }
 
@@ -220,7 +217,7 @@ const battle = (canvas, objects, terrain) => ({
 
         // add counter at bottom right
         let stats = ("Republic: " + this._r_alive.length + " CIS: "
-            + this._c_alive.length + " t: " + this.t + " fps: " + Math.floor(1. / this.freezedelta)
+            + this._c_alive.length + " t: " + this.t + " fps: " + Math.floor(1. / this.time.freezedelta)
             + " size(" + this.field.width + "," + this.field.height + ")");
         this.ctx.font = "12px Arial";
         this.ctx.strokeText(stats, this.field.width - 275, this.field.height - 20);
