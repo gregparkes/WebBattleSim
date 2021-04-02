@@ -1,6 +1,7 @@
 // whether HP are shown on units.
 let IS_HP_DISPLAYED = true;
 let IS_GRID_DISPLAYED = false;
+let IS_TILE_DISPLAYED = false;
 
 // cached inside the loading function to make it cleaner.
 window.onload = function() {
@@ -11,6 +12,7 @@ window.onload = function() {
         update_but = document.getElementById("update_sim"),
         hp_check = document.getElementById("hp_bar"),
         grid_check = document.getElementById("disp_grid"),
+        tilegrid_check = document.getElementById("disp_tile"),
         sim_templ = document.getElementById("sel1"),
         terrain_sel = document.getElementById("terrain1"),
         // variables to do with terrain generation
@@ -61,6 +63,9 @@ window.onload = function() {
     grid_check.addEventListener("click", function(e) {
         IS_GRID_DISPLAYED = grid_check.checked;
     });
+    tilegrid_check.addEventListener("click", function(e) {
+        IS_TILE_DISPLAYED = tilegrid_check.checked;
+    });
     seed_check.addEventListener("click", () => {
         seed_text.disabled = !seed_text.disabled;
     });
@@ -91,8 +96,15 @@ window.onload = function() {
         } else {
             $(".map-gen").prop("disabled", true);
         }
-
     })
+
+    /**
+     * Add a canvas event listener for when we click, and create a little circle where we did.
+     */
+    canvas.addEventListener("click", function(e) {
+        // push a new unit on to the stack
+        battle.units.push(new CloneTrooper(e.offsetX, e.offsetY, AI.aggressive));
+    });
 
     // first draw
     battle.render();
@@ -118,18 +130,20 @@ window.onload = function() {
 
     function createLevel() {
         // also, if the seed is the same, do not re-create the level.
-        let level = null;
+        let level = null,
+            perl = getPerlin();
+
         if (tile_check.checked) {
             // the level is tiled, create a TilePerlinLevel
             let tile_size = Math.floor(Math.pow(2, tile_scale.value));
-            level = new TilePerlinLevel(ctx, width, height, tile_size, terra_def);
+            level = new TilePerlinLevel(ctx, width, height, perl, tile_size, terra_def);
             // now we create it
-            level.create(getPerlin());
+            level.create();
         }
         else {
             // create a normal perlin level.
-            level = new PerlinLevel(ctx, width, height);
-            level.create(getPerlin(), terra_def);
+            level = new PerlinLevel(ctx, width, height, perl);
+            level.create(terra_def);
         }
         return level;
     }
@@ -186,6 +200,8 @@ window.onload = function() {
     function animate_loop() {
         // call update
         battle.update();
+        // call to render
+        battle.render();
 
         if (battle.running && battle.anim_continue()) {
             requestAnimationFrame(animate_loop);

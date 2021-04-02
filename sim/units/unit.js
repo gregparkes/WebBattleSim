@@ -17,7 +17,7 @@ class Unit extends Combative {
         this.hit_radius = 8;
         this.atk = atk;
         this.dex = dex;
-        this.speed = mvs;
+        this.base_speed = this.speed = mvs;
         this.range = range;
         this.fire_rate = fire_rate;
         this.dflr = dflr;
@@ -34,8 +34,14 @@ class Unit extends Combative {
 
         this._crit_this_round = false;
         // a cache for astar search and an index as to where we currently are.
-        this._astar_result = null;
-        this._astar_i = 0;
+        this.astar = {
+            // filled with list of GridNode.
+            result: [],
+            // index pointing to node.
+            i: 0
+        }
+        // holds the coordinates of the tile we are over.
+        this.tile = null;
 
     }
 
@@ -60,14 +66,68 @@ class Unit extends Combative {
         /* check to see if the updated position moves onto an unpassable tile, and if so return true.
          */
         // check if, after translation, we move onto another tile
-        let fx = this.x + (this._nddx * s),
-            fy = this.y + (this._nddy * s),
+        let fx = this.x + (this.dd.x * this.speed * s),
+            fy = this.y + (this.dd.y * this.speed * s),
             tile_other = md.level.tileAt(fx, fy);
 
         return !tile_other.passable;
     }
 
+    /**
+     * Updates the a* cache elements.
+     * assumes a valid target is set.
+     */
+    update_astar(md) {
+        // check whether target is null, and if so we just skip
+        if (this.target !== null) {
+            // in the rare case our target doesn't have a tile, we use their position.
+            let target_tile = (this.target.tile) ? this.target.tile : md.level.getGridNode(this.target.x, this.target.y);
+            // perform a-star search.
+            this.astar.result = astar.search(md.level.graph, this.tile, target_tile);
+            this.astar.i = 0;
+        }
+    }
+
+    /**
+     * Updates the normalized directional derivatives using the tile.
+     */
+    _direction_astar(md) {
+        if (this.astar.result.length > this.astar.i) {
+            // we have another tile to move
+            let node = this.astar.result[this.astar.i],
+                ls = md.level.size,
+                halfLevel = ls / 2,
+                // convert node into pixel locations - center of the tile.
+                pix_x = (node.x * ls) + halfLevel,
+                pix_y = (node.y * ls) + halfLevel;
+
+            // if we're near the current node, move on to the next one next time.
+            if (this.tile.x === node.x && this.tile.y === node.y) {
+                this.astar.i += 1;
+            }
+            // calculate derivatives and move in that direction
+            this.updateToTarget({x: pix_x, y: pix_y}, false);
+            // we update the angle only using the target.
+            this.setAngleToTarget(this.target.x - this.x, this.target.y - this.y);
+
+        } else {
+            this.updateToTarget(this.target);
+        }
+    }
+
     move(md, speed=1.0) {
+
+        this.speed = this.base_speed * ((this.tile.weight !== 0) ? 1/this.tile.weight : 1);
+
+        // if we're using A*, choose the next tile along in the node list
+        if (md.parameters.UNIT_MOVE_MODE === "astar") {
+            // this will set directional derivatives, not angle, but not move.
+            this._direction_astar(md);
+        } else {
+            // else derivatives are the location of our target.
+            this.updateToTarget();
+        }
+
         // if we have tile collision on
         if (md.parameters.IS_TILE_COLLISION && this._tile_collision_check(md, speed)) {
             // AND we collide with a tile, block
@@ -77,8 +137,9 @@ class Unit extends Combative {
         if (md.parameters.IS_UNIT_COLLISION && this._unit_collision_check(md, speed)) {
             return;
         }
-        // else translate.
+        // now move if we can.
         this.translate(md, this.speed*speed);
+
     }
     
     isTargetInRange() {
@@ -135,77 +196,16 @@ class Unit extends Combative {
     
     // update and render defaults
 
-    updateEuclidean(md) {
-        this.updateToTarget();
-        this.ai(this, md);
-    }
-
-    updateAstar(md) {
-
-        let ls = md.level.size,
-            // current tile x and y
-            tx = Math.floor(this.x / ls),
-            ty = Math.floor(this.y / ls);
-
-        if (this._astar_result === null || Math.random() < 0.005)
-        {
-            let ox = Math.floor(this.target.x / ls),
-                oy = Math.floor(this.target.y / ls),
-                start = md.level.graph.grid[ty*md.level.xtiles + tx],
-                end = md.level.graph.grid[oy*md.level.xtiles + ox];
-            // perform a-star search.
-            this._astar_result = astar.search(md.level.graph, start, end);
-            this._astar_i = 0;
-        }
-
-        // check that astar result isn't empty
-        if (this._astar_result.length > this._astar_i) {
-            // check that we have a list, if not default to euclidean
-            let node = this._astar_result[this._astar_i],
-                halfLevel = ls / 2.0,
-                // convert node.x and node.y into pixel corr
-                pix_x = (node.x * ls) + halfLevel,
-                pix_y = (node.y * ls) + halfLevel;
-
-            // check whether we're around the current node, and if so, move to the next one.
-            if (tx === node.x && ty === node.y) {
-                this._astar_i += 1;
-            }
-
-            // now use the node position to update to target
-            this.updateToTarget({x: pix_x, y: pix_y}, false, false);
-            // modify this._dist to comply with actual target.
-            let adx = this.target.x - this.x,
-                ady = this.target.y - this.y;
-            this._dist = utils.distance2XY(adx, ady);
-            this._angle = Math.atan2(ady, adx);
-            // now call AI
-            this.ai(this, md);
-        } else {
-            this.updateEuclidean(md);
-        }
-    }
-
     update(md) {
         this.alive = this.hp > 0.0;
         if (this.alive) {
             // add on the delta to our global cooldown
             this.cooldown += md.time.delta;
-            /*
-            If the unit's movement is euclidean, we update to the target, else we derive derivatives
-            from the A* star aglorithms' next tile in the path.
-             */
-            if (md.parameters.UNIT_MOVE_MODE === "euclidean")
-            {
-                this.updateEuclidean(md);
-            }
-            else if (md.level && md.parameters.UNIT_MOVE_MODE === "astar")
-            {
-                this.updateAstar(md);
-            }
-            else {
-                this._angle += 0.5;
-            }
+            this.updateToTarget();
+            // update our tile position
+            this.tile = md.level.getGridNode(this.x, this.y);
+            // call AI
+            this.ai(this, md);
         }
     }
     
@@ -222,6 +222,11 @@ class Unit extends Combative {
             if (this.hp < this.MAX_HP && IS_HP_DISPLAYED) {
                 draw.healthbar(ctx, this.x, this.y - 6, this.hp / this.MAX_HP);
             }
+            // draw which tile we're over
+            if (this.tile !== null && IS_TILE_DISPLAYED) {
+                draw.text(ctx, this.x, this.y - 10, "("+this.tile.x+","+this.tile.y+")", [0, 0, 0]);
+            }
+
         } else {
             draw.cross(ctx, this.x, this.y, this.color, this.sizebot);
         }

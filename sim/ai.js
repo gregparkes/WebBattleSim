@@ -59,7 +59,6 @@ const ai_next_target = {
     nearest: function(u, md) {
         let enemy = md.get_enemies(u.team),
             enemy_L = enemy.length;
-
         if (enemy_L > 1) {
             // calculate distances
             let dst = enemy.map(v => utils.sqDistance(v, u));
@@ -98,6 +97,10 @@ const AI = {
             AI._aggressive_pursue(u, md);
         } else {
             u.target = next_target(u, md)
+            // update A* here if necessary
+            if (md.parameters.UNIT_MOVE_MODE === "astar") {
+                u.update_astar(md);
+            }
         }
     },
 

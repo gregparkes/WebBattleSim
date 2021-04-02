@@ -5,7 +5,8 @@ const TILE_LAYER = {
         weights: [0.3, 0.35, 0.4, 0.5, 1.0]
     },
     Tundra: {
-        tiles: [TILE.ICY_WATER, Tile("ice2", [0, 255, 255], true),
+        tiles: [TILE.ICY_WATER,
+            Tile("ice2", [0, 255, 255], true, 2),
             Tile("ice3", [204, 238, 255], true),
             Tile("ice4", [250, 250, 250], true)],
         weights: [0.2, 0.35, 0.5, 1.0]

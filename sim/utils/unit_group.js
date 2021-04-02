@@ -32,8 +32,8 @@ const unit_group = {
         for (let i = 0; i < n; i ++) {
 
             let [xt, yt, tile] = level.getRandomPassableTile();
-            let u = new unit(xt*level.size + 5 + Math.random()*5.,
-                             yt*level.size + 5 + Math.random()*5.,
+            let u = new unit(xt*level.size + level.size / 2.,
+                             yt*level.size + level.size / 2.,
                             ai_type);
             X.push(u);
         }

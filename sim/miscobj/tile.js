@@ -3,13 +3,15 @@
  * @param name : string
  * @param color : Array
  * @param passable : boolean
+ * @param mvs : number - Movement speed allowed on tile.
  * @returns {{color, passable, name}}
  * @constructor
  */
-const Tile = (name, color, passable) => ({
+const Tile = (name, color, passable, mvs = 1.0) => ({
     name: name,
     color: color,
-    passable: passable
+    passable: passable,
+    mvs: mvs
 })
 
 // Now we have some pre-defined tiles.

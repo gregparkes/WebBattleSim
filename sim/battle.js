@@ -180,8 +180,6 @@ const battle = (canvas, objects, level) => ({
 
         // filter out obsolete objects.
         this.filter_objects();
-        // finally, draw
-        this.render();
     },
 
     // render the battlefield.
@@ -221,6 +219,7 @@ const battle = (canvas, objects, level) => ({
             + " size(" + this.field.width + "," + this.field.height + ")");
         this.ctx.font = "12px Arial";
         this.ctx.strokeText(stats, this.field.width - 275, this.field.height - 20);
+
     },
 
     _render_grid: function(ctx) {

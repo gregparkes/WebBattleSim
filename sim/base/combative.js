@@ -12,10 +12,6 @@ class Combative extends Sprite {
 
     /**
      * Creates a 'combative'.
-     * @param x : float
-     * @param y : float
-     * @param team : number
-     * @param con : number
      */
     constructor(x, y, team, con) {
         super(x, y, team);
@@ -27,12 +23,14 @@ class Combative extends Sprite {
         // a bunch of hidden parameters for directional derivatives
         this.dx = 0.0;
         this.dy = 0.0;
-
         // directional derivatives and parameters for movement.
-        this._nddx = 0.0;
-        this._nddy = 0.0;
         this._dist = 0.0;
         this._angle = 0.0;
+        // directional derivative.
+        this.dd = {
+            x: 0.0,
+            y: 0.0
+        }
     }
 
     directionalDerivatives(ox, oy) {
@@ -65,8 +63,8 @@ class Combative extends Sprite {
             }
             this._dist = utils.distance2XY(this.dx, this.dy);
             // calculate normalized directional derivatives
-            this._nddx = this.dx / this._dist;
-            this._nddy = this.dy / this._dist;
+            this.dd.x = this.dx / this._dist;
+            this.dd.y = this.dy / this._dist;
             // update the directional angle (to plot arrow).
             if (update_angle) {
                 this.setAngleToTarget(this.dx, this.dy);
@@ -84,9 +82,16 @@ class Combative extends Sprite {
      * @param speed : number
      */
     translate(md, speed) {
-        this.x += this._nddx * speed;
-        this.y += this._nddy * speed;
+        this.x += this.dd.x * speed;
+        this.y += this.dd.y * speed;
         // bounds check to edge of the map
+        this.bounds_check(md);
+    }
+
+    translate_direct(ddx, ddy, md, speed) {
+        this.x += ddx * speed;
+        this.y += ddy * speed;
+        // boundary checking
         this.bounds_check(md);
     }
 

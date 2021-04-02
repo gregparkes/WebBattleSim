@@ -21,17 +21,20 @@ class Level {
 
 class PerlinLevel extends Level {
 
-    constructor(ctx, width, height) {
+    constructor(ctx, width, height, perlin) {
         super(ctx, width, height);
+        this.perlin = perlin;
+        this.seed = 0;
+        // save a copy of seed
     }
 
-    create(perlin, terrain) {
+    create(terrain) {
         /* Creates the perlin level.
         *
         * Perlin: {seed, scale, octaves, persistance, lacunarity}
         * terrain must be an instance of Tile_layer.*
         * */
-        this.make_image_array(this.w, this.h, perlin);
+        this.make_image_array(this.w, this.h);
 
         // go through and assign to imgData
         for (let y = 0; y < this.h; y ++) {
@@ -49,13 +52,13 @@ class PerlinLevel extends Level {
         }
     }
 
-    make_image_array(nw, nh, perlin) {
+    make_image_array(nw, nh) {
 
         this.pixels = new Float32Array(nw*nh);
+        // recalculate seed values.
+        this.seed = (this.perlin.seed === Number.MAX_VALUE) ? utils.randomInt(-100000,100000) : -this.perlin.seed;
 
-        let xoff = (perlin.seed === Number.MAX_VALUE) ? utils.randomInt(-100000,100000) : -perlin.seed,
-            yoff = (perlin.seed === Number.MAX_VALUE) ? utils.randomInt(-100000,100000) : -perlin.seed,
-            pix_min = Number.MAX_VALUE,
+        let pix_min = Number.MAX_VALUE,
             pix_max = Number.MIN_VALUE,
             halfW = nw / 2,
             halfH = nh / 2;
@@ -68,14 +71,14 @@ class PerlinLevel extends Level {
                     freq = 1.0,
                     noiseHeight = 0.0;
 
-                for (let i = 0; i < perlin.octaves; i ++) {
-                    let sx = (((x - halfW) / nw) * perlin.scale * freq) + xoff,
-                        sy = (((y - halfH) / nh) * perlin.scale * freq) + yoff,
+                for (let i = 0; i < this.perlin.octaves; i ++) {
+                    let sx = (((x - halfW) / nw) * this.perlin.scale * freq) + this.seed,
+                        sy = (((y - halfH) / nh) * this.perlin.scale * freq) + this.seed,
                         p = PerlinNoise(sx, sy, 0.8);
 
                     noiseHeight += p * amplitude;
-                    amplitude *= perlin.persistance;
-                    freq *= perlin.lacunarity;
+                    amplitude *= this.perlin.persistance;
+                    freq *= this.perlin.lacunarity;
                 }
 
                 if (noiseHeight < pix_min) {
@@ -110,13 +113,19 @@ class PerlinLevel extends Level {
         }
     }
 
+    render(ctx) {
+        super.render(ctx);
+        // add a label in the corner for the level seed.
+        draw.text(ctx, 20, this.h - 20, "seed: " + this.seed, [0, 0, 0]);
+    }
+
 }
 
 class TilePerlinLevel extends PerlinLevel {
 
-    constructor(ctx, width, height, tile_size, layers) {
+    constructor(ctx, width, height, perlin, tile_size, layers) {
         /* Creates a perlin map which is tiled, more computationally efficient and basis for making nodes. */
-        super(ctx, width, height);
+        super(ctx, width, height, perlin);
         this.size = tile_size;
         this.layers = layers;
         // set number of x tiles and y tiles
@@ -127,13 +136,13 @@ class TilePerlinLevel extends PerlinLevel {
         this.graph = new Graph(this.xtiles, this.ytiles);
     }
 
-    create(perlin) {
+    create() {
         /* Creates the perlin tile level.
         *
         * Perlin: {seed, scale, octaves, persistance, lacunarity}
         * terrain must be an instance of Tile_layer.*
         * */
-        this.make_image_array(this.xtiles, this.ytiles, perlin);
+        this.make_image_array(this.xtiles, this.ytiles);
 
         // draw tiles from xtiles - 1, ytiles - 1
         this._draw_tile_array(this.xtiles - 1, this.ytiles - 1, this.size, this.size);
@@ -143,7 +152,7 @@ class TilePerlinLevel extends PerlinLevel {
             let off = yt*this.xtiles;
             for (let xt = 0; xt < this.xtiles; xt ++) {
                 let t = this.getTile(this.pixels[off+xt]);
-                this.graph.addNode(xt, yt, t.passable ? 1 : 0);
+                this.graph.addNode(xt, yt, t.passable ? t.mvs : 0);
             }
         }
         this.graph.init();
@@ -186,8 +195,18 @@ class TilePerlinLevel extends PerlinLevel {
         return this.getTile(this.pixels[ty*this.xtiles + tx]);
     }
 
+    tileFromGridNode(node) {
+        return this.getTile(this.pixels[node.y*this.xtiles + node.x]);
+    }
+
     tileCoord(tx, ty) {
         return this.getTile(this.pixels[ty*this.xtiles + tx]);
+    }
+
+    getGridNode(x, y) {
+        let tx = Math.floor(x / this.size),
+            ty = Math.floor(y / this.size);
+        return this.graph.grid[ty*this.xtiles + tx];
     }
 
     /**
@@ -224,8 +243,6 @@ class TilePerlinLevel extends PerlinLevel {
 
         return [xt, yt, tile];
     }
-
-
 
     _draw_tile_array(xtiles, ytiles, xsize, ysize) {
 
