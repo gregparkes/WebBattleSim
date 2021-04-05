@@ -18,7 +18,6 @@
     <script type="text/javascript" src="../sim/attack/attack.js"></script>
     <script type="text/javascript" src="../sim/attack/projectile.js"></script>
     <script type="text/javascript" src="../sim/attack/melee.js"></script>
-    <script type="text/javascript" src="../sim/attack/att_types.js"></script>
     <script type="text/javascript" src="../sim/units/unit.js"></script>
     <script type="text/javascript" src="../sim/units/jedi.js"></script>
     <script type="text/javascript" src="../sim/units/unit_special.js"></script>
@@ -39,12 +38,14 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
             </button>
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav">
                 <li><a href="../index.html"><span class="glyphicon glyphicon-home"></span> Home</a></li>
                 <li class="active"><a href="#"><span class="glyphicon glyphicon-user"></span> Unit</a></li>
+                <li><a href="analysis.html"><span class="glyphicon glyphicon-signal"></span> Analysis</a></li>
                 <li><a href="information.html"><span class="glyphicon glyphicon-hdd"></span> Info</a></li>
                 <li><a href="license.html"><span class="glyphicon glyphicon-book"></span> License</a></li>
                 <li><a href="https://github.com/gregparkes/WebBattleSim"><span class="glyphicon glyphicon-circle-arrow-up"></span> GitHub</a></li>
@@ -133,7 +134,7 @@
             <div id="collapse5" class="panel-collapse collapse">
                 <div class="panel-body">
                     <p>Range determines how close a unit in distance of pixels needs
-                        to be before it can begin the attack phase.
+                        to be before it can begin the attack phase. This is calculated as the radius of a circle.
                     Melee attackers nearly always have a substantially reduced range compared to projectile-firing
                     units. </p>
                 </div>
@@ -145,10 +146,8 @@
             </h4></div>
             <div id="collapse6" class="panel-collapse collapse">
                 <div class="panel-body">
-                    <p>Fire rate determines the probability of initiating an attack object AFTER the hit roll. Thus,
-                    for example a fire rate of 0.03 means that there is a 3% chance the unit, post-hit roll, will
-                    initiate a true attack, using damage and dexterity rolls for damage dealing. The primary purpose
-                    of this attribute is to slow down the simulation and make it more aesthetic. </p>
+                    <p>Fire rate determines the rate of which an attack happens, in seconds. This is driven by a cooldown attribute within
+                    each unit. For a fire rate of 1, there is a one second delay between each attack. </p>
                 </div>
             </div>
         </div>

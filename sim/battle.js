@@ -83,6 +83,8 @@ const battle = (canvas, objects, level) => ({
     crits: [],
     // obstacles
     obstacles: objects.filter(r => r instanceof RectObstacle),
+    // list of events
+    events: [],
 
     // START FUNCTION to START the BATTLE
     start: function() {
@@ -134,6 +136,7 @@ const battle = (canvas, objects, level) => ({
     filter_objects: function(every_t = 100) {
         // go through and filter out the non-alive objects every so often
         if (this.t % every_t === 0) {
+            this.events = this.events.filter(e => e.alive);
             this.projectiles = this.projectiles.filter(p => p.alive);
             this.melees = this.melees.filter(m => m.alive);
             this.crits = this.crits.filter(m => m.alive);
@@ -178,6 +181,8 @@ const battle = (canvas, objects, level) => ({
         // crits
         this.crits.forEach(update_f);
 
+        // events are not updated here and are responsibility of classes.
+
         // filter out obsolete objects.
         this.filter_objects();
     },
@@ -200,7 +205,10 @@ const battle = (canvas, objects, level) => ({
         this.units.forEach(render_f);
         this.turrets.forEach(render_f);
         this.projectiles.forEach(render_f);
-        this.melees.forEach(render_f);
+
+        // do not render
+        // this.melees.forEach(render_f);
+
         // update crits
         this.crits.forEach(render_f);
 

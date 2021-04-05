@@ -109,6 +109,10 @@ window.onload = function() {
     // first draw
     battle.render();
 
+    /**
+     * Here we describe our global functions that handle the simulation start, and level creation.
+     */
+
     function load_templates() {
         Object.keys(btemplate_map).forEach((element, i) => {
             let elem = document.createElement("option"),
@@ -128,6 +132,10 @@ window.onload = function() {
         };
     }
 
+    /**
+     * Function that creates a PerlinLevel depending on what the perlin parameters are.
+     * @returns {PerlinLevel}
+     */
     function createLevel() {
         // also, if the seed is the same, do not re-create the level.
         let level = null,
@@ -148,6 +156,10 @@ window.onload = function() {
         return level;
     }
 
+
+    /**
+     * Resets the simulation to the start when called.
+     */
     function reset_sim(e) {
         // only reset if we haven't ran before, or still fighting, or time exceeded.
         if (!battle.running) {
@@ -170,6 +182,9 @@ window.onload = function() {
         }
     }
 
+    /**
+     * Pauses the simulation inplace.
+     */
     function pause_sim(e) {
         if (battle.running) {
             battle.running = false;
@@ -197,6 +212,9 @@ window.onload = function() {
         // prevent page top jump
     }
 
+    /**
+     * This is called when to start the animation, and auto-calls itself while the battle runs.
+     */
     function animate_loop() {
         // call update
         battle.update();
@@ -213,6 +231,9 @@ window.onload = function() {
         }
     }
 
+    /**
+     * This function is called when the simulation parameters are updated.
+     */
     function update_sim(e) {
         // pause the sim
         pause_sim(e);

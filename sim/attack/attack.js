@@ -1,3 +1,7 @@
+const AttackType = {
+    PROJECTILE: 0, MELEE: 1
+}
+
 // a generic attack object
 class Attack extends Sprite {
     // defines a temporary Attack object which exists to be seen then die

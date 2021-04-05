@@ -28,8 +28,8 @@
     <script type="text/javascript" src="sim/utils/collide.js"></script>
     <script type="text/javascript" src="sim/base/sprite.js"></script>
     <script type="text/javascript" src="sim/base/combative.js"></script>
-    <script type="text/javascript" src="sim/base/astar.js"></script>
-    <script type="text/javascript" src="sim/miscobj/tile.js"></script>
+    <script type="text/javascript" src="sim/background/astar.js"></script>
+    <script type="text/javascript" src="sim/background/tile.js"></script>
     <script type="text/javascript" src="sim/background/tile_layer.js"></script>
     <script type="text/javascript" src="sim/background/level.js"></script>
     <script type="text/javascript" src="sim/units/unit.js"></script>
@@ -45,10 +45,10 @@
     <script type="text/javascript" src="sim/attack/attack.js"></script>
     <script type="text/javascript" src="sim/attack/projectile.js"></script>
     <script type="text/javascript" src="sim/attack/melee.js"></script>
-    <script type="text/javascript" src="sim/attack/att_types.js"></script>
     <script type="text/javascript" src="sim/miscobj/turret.js"></script>
     <script type="text/javascript" src="sim/miscobj/obstacle.js"></script>
     <script type="text/javascript" src="sim/animate/crit.js"></script>
+    <script type="text/javascript" src="sim/animate/event.js"></script>
     <script type="text/javascript" src="sim/spawn/spawner.js"></script>
     <script type="text/javascript" src="sim/spawn/tilespawner.js"></script>
     <script type="text/javascript" src="sim/spawn/groupspawner.js"></script>
@@ -67,12 +67,14 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
             </button>
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
             <ul class="nav navbar-nav">
                 <li class="active"><a href="#"><span class="glyphicon glyphicon-home"></span> Home</a></li>
                 <li><a href="content/unit.html"><span class="glyphicon glyphicon-user"></span> Unit</a></li>
+                <li><a href="content/analysis.html"><span class="glyphicon glyphicon-signal"></span> Analysis</a></li>
                 <li><a href="content/information.html"><span class="glyphicon glyphicon-hdd"></span> Info</a></li>
                 <li><a href="content/license.html"><span class="glyphicon glyphicon-book"></span> License</a></li>
                 <li><a href="https://github.com/gregparkes/WebBattleSim"><span class="glyphicon glyphicon-circle-arrow-up"></span> GitHub</a></li>
@@ -269,7 +271,7 @@
                                                 </div>
                                                 <div class="checkbox text-info text-center">
                                                     <label><input type="checkbox" id="seed_check" class="map-gen" checked>Seed:</label>
-                                                    <input type="number" class="form-control map-gen" id="perlin_seed" value="123456">
+                                                    <input type="number" class="form-control map-gen" id="perlin_seed" value="93726">
                                                 </div>
 
                                             </div>
