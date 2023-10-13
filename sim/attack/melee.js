@@ -5,7 +5,7 @@ class Melee extends Attack {
         // call constructor of attack
         super(source, damage, false);
         this.target = target;
-        this.e = EventDelay(this.damage_unit, 0.5, 1);
+        this.e = EventDelay(this.damage_unit(), 0.5, 1);
     }
     /*
     Called by EventDelay
